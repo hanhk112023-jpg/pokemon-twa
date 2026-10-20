@@ -1,6 +1,6 @@
 /**
  * Main App Controller & State Manager
- * Telegram WebApp SDK Lifecycle Integration
+ * Telegram WebApp SDK Lifecycle Integration & Leaderboard Management
  */
 
 // Global Instances
@@ -25,7 +25,7 @@ class PokemonApp {
       lastDailyClaim: null
     };
 
-    this.currentTab = "gacha"; // "gacha" | "arena-list" | "battle" | "collection" | "profile"
+    this.currentTab = "gacha"; // "gacha" | "arena-list" | "battle" | "leaderboard" | "collection" | "profile"
     this.currentFilterType = "all";
     this.currentFilterRarity = "all";
     this.selectedCardForDetail = null;
@@ -51,6 +51,7 @@ class PokemonApp {
     this.renderHeaderStats();
     this.renderGachaShop();
     this.renderArenaList();
+    this.renderLeaderboard();
     this.renderCollection();
     this.renderProfile();
     this.renderQuests();
@@ -113,6 +114,38 @@ class PokemonApp {
     this.state.stats.packsOpened++;
   }
 
+  // Calculate Player Elo & Tier
+  getPlayerEloData() {
+    const elo = Math.max(800, 1000 + (this.state.stats.battlesWon * 35) - (this.state.stats.battlesLost * 15));
+    let tier = "Đồng Đoàn";
+    let tierColor = "text-amber-600 bg-amber-500/10 border-amber-600/30";
+    let nextTierElo = 1100;
+
+    if (elo >= 2100) {
+      tier = "Bậc Thầy Pokémon (Master Ball)";
+      tierColor = "text-purple-400 bg-purple-500/20 border-purple-500/40";
+      nextTierElo = 3000;
+    } else if (elo >= 1800) {
+      tier = "Kim Cương Bất Bại";
+      tierColor = "text-cyan-400 bg-cyan-500/20 border-cyan-500/40";
+      nextTierElo = 2100;
+    } else if (elo >= 1550) {
+      tier = "Bạch Kim Tối Thượng";
+      tierColor = "text-teal-300 bg-teal-500/20 border-teal-500/40";
+      nextTierElo = 1800;
+    } else if (elo >= 1300) {
+      tier = "Vàng Đấu Sĩ";
+      tierColor = "text-amber-400 bg-amber-500/20 border-amber-500/40";
+      nextTierElo = 1550;
+    } else if (elo >= 1100) {
+      tier = "Bạc Tinh Anh";
+      tierColor = "text-slate-300 bg-slate-500/20 border-slate-500/40";
+      nextTierElo = 1300;
+    }
+
+    return { elo, tier, tierColor, nextTierElo };
+  }
+
   // LocalStorage Persistence
   loadState() {
     try {
@@ -163,6 +196,7 @@ class PokemonApp {
     if (tab === "profile") this.renderProfile();
     if (tab === "gacha") this.renderGachaShop();
     if (tab === "arena-list") this.renderArenaList();
+    if (tab === "leaderboard") this.renderLeaderboard();
   }
 
   // Render Top Header Balance & Stats
@@ -202,7 +236,9 @@ class PokemonApp {
 
         <!-- Right: Pack Artwork (High Res Card Cover) -->
         <div class="z-10 w-24 h-32 rounded-xl overflow-hidden shadow-2xl border border-white/20 transform group-hover:rotate-2 group-hover:scale-105 transition-all">
-          <img src="${pack.coverCardImage}" class="w-full h-full object-cover" />
+          <img src="${pack.coverCardImage}" 
+               onerror="this.onerror=null; this.src='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/6.png'"
+               class="w-full h-full object-cover" />
         </div>
       </div>
     `).join("");
@@ -219,7 +255,9 @@ class PokemonApp {
       previewContainer.innerHTML = `
         <div class="flex items-center gap-3.5 p-3.5 rounded-3xl bg-slate-900/90 border border-amber-400/30 shadow-xl">
           <div class="w-16 h-22 rounded-xl overflow-hidden border border-white/20 shadow-md">
-            <img src="${active.imageSmall}" class="w-full h-full object-cover" />
+            <img src="${active.imageSmall}" 
+                 onerror="this.onerror=null; this.src='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png'"
+                 class="w-full h-full object-cover" />
           </div>
           <div class="flex-1 min-w-0">
             <div class="flex items-center gap-2">
@@ -244,7 +282,9 @@ class PokemonApp {
     list.innerHTML = GYM_LEADERS.map((leader) => `
       <div class="p-3.5 rounded-2xl bg-slate-900/80 border border-slate-800 flex items-center justify-between hover:border-slate-700 transition-all shadow-md">
         <div class="flex items-center gap-3">
-          <img src="${leader.avatar}" class="w-12 h-12 rounded-full bg-black/40 border border-white/10 p-0.5" />
+          <img src="${leader.avatarImg}" 
+               onerror="this.onerror=null; this.src='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/badges/1.png'"
+               class="w-12 h-12 rounded-full bg-black/40 border border-white/10 p-0.5" />
           <div>
             <h4 class="text-white font-bold text-sm flex items-center gap-1.5">
               <span>${leader.name}</span>
@@ -265,6 +305,101 @@ class PokemonApp {
         </button>
       </div>
     `).join("");
+  }
+
+  // Render Leaderboard (BXH) View
+  renderLeaderboard() {
+    const container = document.getElementById("leaderboard-container");
+    if (!container) return;
+
+    const { elo, tier, tierColor } = this.getPlayerEloData();
+    const totalBattles = this.state.stats.battlesWon + this.state.stats.battlesLost;
+    const winRate = totalBattles > 0 ? Math.round((this.state.stats.battlesWon / totalBattles) * 100) : 0;
+
+    container.innerHTML = `
+      <!-- User's Current Rank Card -->
+      <div class="rounded-3xl bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 p-4 border border-amber-500/40 shadow-2xl relative overflow-hidden">
+        <div class="flex items-center justify-between">
+          <div>
+            <span class="text-[10px] text-amber-400 uppercase font-black tracking-wider block">Hạng Của Bạn</span>
+            <h3 class="text-white font-black text-lg mt-0.5 flex items-center gap-2">
+              <span>${this.tgUser.firstName}</span>
+              <span class="text-xs px-2 py-0.5 rounded-full font-black border ${tierColor}">
+                ${tier}
+              </span>
+            </h3>
+          </div>
+          <div class="text-right">
+            <span class="text-[10px] text-slate-400 uppercase font-bold block">Điểm Elo</span>
+            <span class="text-amber-300 font-mono font-black text-xl">${elo}</span>
+          </div>
+        </div>
+
+        <!-- Rank Stats Row -->
+        <div class="grid grid-cols-3 gap-2 text-center mt-3 pt-3 border-t border-white/10 text-xs">
+          <div>
+            <span class="text-[9px] text-slate-400 uppercase font-bold block">Thắng / Thua</span>
+            <span class="text-white font-bold font-mono">${this.state.stats.battlesWon}W - ${this.state.stats.battlesLost}L</span>
+          </div>
+          <div>
+            <span class="text-[9px] text-slate-400 uppercase font-bold block">Tỉ Lệ Thắng</span>
+            <span class="text-emerald-400 font-black font-mono">${winRate}%</span>
+          </div>
+          <div>
+            <span class="text-[9px] text-slate-400 uppercase font-bold block">Vị Trí Ước Tính</span>
+            <span class="text-amber-400 font-black font-mono">#${Math.max(7, 100 - this.state.stats.battlesWon)}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Leaderboard Header -->
+      <div class="flex items-center justify-between pt-2">
+        <h3 class="text-xs font-black uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+          <span>🏆 Top Huấn Luyện Viên Huyền Thoại Kanto</span>
+        </h3>
+        <span class="text-[10px] text-amber-400 font-bold">Mùa Giải 1</span>
+      </div>
+
+      <!-- Top Champions List -->
+      <div class="space-y-2">
+        ${TOP_LEADERBOARD.map((champ) => `
+          <div class="p-3.5 rounded-2xl bg-slate-900/85 border ${champ.rank === 1 ? 'border-amber-400/60 shadow-amber-500/20' : 'border-slate-800'} flex items-center justify-between hover:border-slate-700 transition-all shadow-md">
+            <div class="flex items-center gap-3">
+              <!-- Rank Number Badge -->
+              <div class="w-7 h-7 rounded-full flex items-center justify-center font-black text-xs ${
+                champ.rank === 1 ? 'bg-amber-400 text-slate-950 shadow-md' :
+                champ.rank === 2 ? 'bg-slate-300 text-slate-950' :
+                champ.rank === 3 ? 'bg-amber-700 text-white' : 'bg-slate-800 text-slate-400'
+              }">
+                ${champ.rank}
+              </div>
+
+              <!-- Avatar & Info -->
+              <img src="${champ.avatar}" 
+                   onerror="this.onerror=null; this.src='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/badges/1.png'"
+                   class="w-10 h-10 rounded-full bg-black/40 border border-white/10 p-0.5" />
+              <div>
+                <h4 class="text-white font-bold text-xs flex items-center gap-1.5">
+                  <span>${champ.name}</span>
+                  <span class="text-[9px] px-1.5 py-0.2 rounded font-black bg-purple-500/20 text-purple-300">
+                    ${champ.tier}
+                  </span>
+                </h4>
+                <p class="text-[10px] text-slate-400 font-mono mt-0.5">
+                  <span class="text-amber-400 font-bold">${champ.elo} Elo</span> • Tỉ lệ: <span class="text-emerald-400">${champ.winRate}</span> • Bài tủ: <span class="text-slate-300">${champ.favoriteCard}</span>
+                </p>
+              </div>
+            </div>
+
+            <!-- Challenge Button -->
+            <button onclick="battleEngine.startBattle('${champ.leaderId}')"
+                    class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-300 border border-amber-400/30 text-[10px] font-black uppercase tracking-wider shadow active:scale-95 transition-all">
+              Thách Đấu ⚔️
+            </button>
+          </div>
+        `).join("")}
+      </div>
+    `;
   }
 
   // Render Collection Binder Grid
@@ -300,7 +435,10 @@ class PokemonApp {
                card.rarity === 'legendary' ? 'ring-1 ring-purple-400/60' : ''
              }">
           
-          <img src="${card.imageSmall}" loading="lazy" class="w-full h-full object-cover rounded-xl" />
+          <img src="${card.imageSmall}" 
+               loading="lazy" 
+               onerror="this.onerror=null; this.src='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png'"
+               class="w-full h-full object-cover rounded-xl" />
 
           <!-- Holo Shimmer Layer -->
           <div class="holo-card-overlay ${card.rarity === 'mythic' ? 'holo-mythic' : card.rarity === 'legendary' ? 'holo-legendary' : ''}"></div>
@@ -346,7 +484,9 @@ class PokemonApp {
 
         <!-- Big 3D Card Display -->
         <div class="tcg-card-frame w-48 h-68 my-2 relative shadow-2xl rounded-2xl overflow-hidden">
-          <img src="${card.imageLarge}" class="w-full h-full object-cover rounded-2xl" />
+          <img src="${card.imageLarge}" 
+               onerror="this.onerror=null; this.src='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png'"
+               class="w-full h-full object-cover rounded-2xl" />
           <div class="holo-card-overlay ${card.rarity === 'mythic' ? 'holo-mythic' : card.rarity === 'legendary' ? 'holo-legendary' : ''}"></div>
         </div>
 
@@ -403,10 +543,14 @@ class PokemonApp {
     const nameEl = document.getElementById("profile-name");
     const userEl = document.getElementById("profile-username");
     const avatarEl = document.getElementById("profile-avatar");
+    const rankTagEl = document.getElementById("profile-rank-tag");
+
+    const { elo, tier } = this.getPlayerEloData();
 
     if (nameEl) nameEl.innerText = this.tgUser.firstName;
     if (userEl) userEl.innerText = `@${this.tgUser.username} • ID: ${this.tgUser.id}`;
     if (avatarEl && this.tgUser.photoUrl) avatarEl.src = this.tgUser.photoUrl;
+    if (rankTagEl) rankTagEl.innerText = `Rank: ${tier} (${elo} Elo)`;
 
     const wonEl = document.getElementById("profile-won");
     const lostEl = document.getElementById("profile-lost");

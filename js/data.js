@@ -1,7 +1,5 @@
 /**
- * Official Pokémon TCG Card Database
- * Authentic cards from Pokémon 151 (sv3pt5) & Celebrations (cel25)
- * Card scans hosted on pokemontcg.io CDN
+ * Official Pokémon TCG Card Database & Leaderboard Data
  */
 
 const POKEMON_TCG_CARDS = [
@@ -26,7 +24,8 @@ const POKEMON_TCG_CARDS = [
         ],
         "damage": 20,
         "damageText": "20",
-        "text": "Heal 20 damage from this Pokémon."
+        "text": "Heal 20 damage from this Pokémon.",
+        "hasCoinFlip": false
       }
     ],
     "retreatCost": 2,
@@ -54,7 +53,8 @@ const POKEMON_TCG_CARDS = [
         ],
         "damage": 30,
         "damageText": "30",
-        "text": "Heal 20 damage from this Pokémon."
+        "text": "Heal 20 damage from this Pokémon.",
+        "hasCoinFlip": false
       },
       {
         "name": "Vine Whip",
@@ -65,7 +65,8 @@ const POKEMON_TCG_CARDS = [
         ],
         "damage": 80,
         "damageText": "80",
-        "text": ""
+        "text": "",
+        "hasCoinFlip": false
       }
     ],
     "retreatCost": 3,
@@ -94,7 +95,8 @@ const POKEMON_TCG_CARDS = [
         ],
         "damage": 150,
         "damageText": "150",
-        "text": "Your opponent's Active Pokémon is now Confused and Poisoned."
+        "text": "Your opponent's Active Pokémon is now Confused and Poisoned.",
+        "hasCoinFlip": false
       }
     ],
     "retreatCost": 4,
@@ -121,7 +123,8 @@ const POKEMON_TCG_CARDS = [
         ],
         "damage": 30,
         "damageText": "30",
-        "text": "Discard a Stadium in play."
+        "text": "Discard a Stadium in play.",
+        "hasCoinFlip": false
       },
       {
         "name": "Steady Firebreathing",
@@ -131,7 +134,8 @@ const POKEMON_TCG_CARDS = [
         ],
         "damage": 30,
         "damageText": "30",
-        "text": ""
+        "text": "",
+        "hasCoinFlip": false
       }
     ],
     "retreatCost": 1,
@@ -158,7 +162,8 @@ const POKEMON_TCG_CARDS = [
         ],
         "damage": 20,
         "damageText": "20",
-        "text": ""
+        "text": "",
+        "hasCoinFlip": false
       },
       {
         "name": "Fire Blast",
@@ -169,7 +174,8 @@ const POKEMON_TCG_CARDS = [
         ],
         "damage": 90,
         "damageText": "90",
-        "text": "Discard an Energy from this Pokémon."
+        "text": "Discard an Energy from this Pokémon.",
+        "hasCoinFlip": false
       }
     ],
     "retreatCost": 2,
@@ -196,7 +202,8 @@ const POKEMON_TCG_CARDS = [
         ],
         "damage": 60,
         "damageText": "60+",
-        "text": "If this Pokémon has any damage counters on it, this attack does 100 more damage."
+        "text": "If this Pokémon has any damage counters on it, this attack does 100 more damage.",
+        "hasCoinFlip": true
       },
       {
         "name": "Explosive Vortex",
@@ -208,7 +215,8 @@ const POKEMON_TCG_CARDS = [
         ],
         "damage": 330,
         "damageText": "330",
-        "text": "Discard 3 Energy from this Pokémon."
+        "text": "Discard 3 Energy from this Pokémon.",
+        "hasCoinFlip": false
       }
     ],
     "retreatCost": 2,
@@ -235,7 +243,8 @@ const POKEMON_TCG_CARDS = [
         ],
         "damage": 30,
         "damageText": "30",
-        "text": "Flip a coin. If heads, during your opponent's next turn, prevent all damage done to this Pokémon by attacks."
+        "text": "Flip a coin. If heads, during your opponent's next turn, prevent all damage done to this Pokémon by attacks.",
+        "hasCoinFlip": true
       },
       {
         "name": "Skull Bash",
@@ -245,7 +254,8 @@ const POKEMON_TCG_CARDS = [
         ],
         "damage": 20,
         "damageText": "20",
-        "text": ""
+        "text": "",
+        "hasCoinFlip": false
       }
     ],
     "retreatCost": 1,
@@ -272,7 +282,8 @@ const POKEMON_TCG_CARDS = [
         ],
         "damage": 30,
         "damageText": "30",
-        "text": "Put up to 3 Basic Water Energy cards from your discard pile into your hand."
+        "text": "Put up to 3 Basic Water Energy cards from your discard pile into your hand.",
+        "hasCoinFlip": false
       },
       {
         "name": "Spinning Attack",
@@ -282,7 +293,8 @@ const POKEMON_TCG_CARDS = [
         ],
         "damage": 50,
         "damageText": "50",
-        "text": ""
+        "text": "",
+        "hasCoinFlip": false
       }
     ],
     "retreatCost": 2,
@@ -310,7 +322,8 @@ const POKEMON_TCG_CARDS = [
         ],
         "damage": 140,
         "damageText": "140×",
-        "text": "Discard up to 2 Basic Water Energy cards from your hand. This attack does 140 damage for each card you discarded in this way."
+        "text": "Discard up to 2 Basic Water Energy cards from your hand. This attack does 140 damage for each card you discarded in this way.",
+        "hasCoinFlip": false
       }
     ],
     "retreatCost": 3,
@@ -337,7 +350,8 @@ const POKEMON_TCG_CARDS = [
         ],
         "damage": 30,
         "damageText": "30",
-        "text": "Search your deck for up to 2 Basic Pokémon and put them onto your Bench. Then, shuffle your deck."
+        "text": "Search your deck for up to 2 Basic Pokémon and put them onto your Bench. Then, shuffle your deck.",
+        "hasCoinFlip": false
       },
       {
         "name": "Tackle",
@@ -347,7 +361,8 @@ const POKEMON_TCG_CARDS = [
         ],
         "damage": 20,
         "damageText": "20",
-        "text": ""
+        "text": "",
+        "hasCoinFlip": false
       }
     ],
     "retreatCost": 1,
@@ -374,7 +389,8 @@ const POKEMON_TCG_CARDS = [
         ],
         "damage": 30,
         "damageText": "30",
-        "text": "Search your deck for a Basic Lightning Energy card and attach it to this Pokémon. Then, shuffle your deck."
+        "text": "Search your deck for a Basic Lightning Energy card and attach it to this Pokémon. Then, shuffle your deck.",
+        "hasCoinFlip": false
       },
       {
         "name": "Pika Punch",
@@ -385,7 +401,8 @@ const POKEMON_TCG_CARDS = [
         ],
         "damage": 50,
         "damageText": "50",
-        "text": ""
+        "text": "",
+        "hasCoinFlip": false
       }
     ],
     "retreatCost": 1,
@@ -413,7 +430,8 @@ const POKEMON_TCG_CARDS = [
         ],
         "damage": 90,
         "damageText": "90+",
-        "text": "This attack does 30 more damage for each of your opponent's Benched Pokémon."
+        "text": "This attack does 30 more damage for each of your opponent's Benched Pokémon.",
+        "hasCoinFlip": true
       },
       {
         "name": "Dimensional Hand",
@@ -423,7 +441,8 @@ const POKEMON_TCG_CARDS = [
         ],
         "damage": 120,
         "damageText": "120",
-        "text": "This attack can be used even if this Pokémon is on the Bench."
+        "text": "This attack can be used even if this Pokémon is on the Bench.",
+        "hasCoinFlip": false
       }
     ],
     "retreatCost": 1,
@@ -451,12 +470,92 @@ const POKEMON_TCG_CARDS = [
         ],
         "damage": 100,
         "damageText": "100",
-        "text": "Discard the top 2 cards of your opponent's deck."
+        "text": "Discard the top 2 cards of your opponent's deck.",
+        "hasCoinFlip": false
       }
     ],
     "retreatCost": 2,
     "imageSmall": "https://images.pokemontcg.io/sv3pt5/68.png",
     "imageLarge": "https://images.pokemontcg.io/sv3pt5/68_hires.png"
+  },
+  {
+    "id": "sv3pt5-74",
+    "name": "Geodude",
+    "hp": 80,
+    "type": "fighting",
+    "types": [
+      "Fighting"
+    ],
+    "rarity": "common",
+    "rarityLabel": "Common",
+    "isEx": false,
+    "stage": "Basic",
+    "attacks": [
+      {
+        "name": "Stiffen",
+        "cost": [
+          "Fighting"
+        ],
+        "damage": 30,
+        "damageText": "30",
+        "text": "During your opponent's next turn, this Pokémon takes 30 less damage from attacks (after applying Weakness and Resistance).",
+        "hasCoinFlip": false
+      },
+      {
+        "name": "Knuckle Punch",
+        "cost": [
+          "Fighting",
+          "Colorless"
+        ],
+        "damage": 20,
+        "damageText": "20",
+        "text": "",
+        "hasCoinFlip": false
+      }
+    ],
+    "retreatCost": 2,
+    "imageSmall": "https://images.pokemontcg.io/sv3pt5/74.png",
+    "imageLarge": "https://images.pokemontcg.io/sv3pt5/74_hires.png"
+  },
+  {
+    "id": "sv3pt5-76",
+    "name": "Golem ex",
+    "hp": 330,
+    "type": "fighting",
+    "types": [
+      "Fighting"
+    ],
+    "rarity": "legendary",
+    "rarityLabel": "Double Rare",
+    "isEx": true,
+    "stage": "Stage 2",
+    "attacks": [
+      {
+        "name": "Dynamic Roll",
+        "cost": [
+          "Fighting"
+        ],
+        "damage": 50,
+        "damageText": "50",
+        "text": "During your next turn, attacks used by this Pokémon do 120 more damage to your opponent's Active Pokémon (before applying Weakness and Resistance).",
+        "hasCoinFlip": false
+      },
+      {
+        "name": "Rock Blaster",
+        "cost": [
+          "Fighting",
+          "Colorless",
+          "Colorless"
+        ],
+        "damage": 180,
+        "damageText": "180",
+        "text": "This attack's damage isn't affected by Resistance.",
+        "hasCoinFlip": false
+      }
+    ],
+    "retreatCost": 4,
+    "imageSmall": "https://images.pokemontcg.io/sv3pt5/76.png",
+    "imageLarge": "https://images.pokemontcg.io/sv3pt5/76_hires.png"
   },
   {
     "id": "sv3pt5-94",
@@ -478,7 +577,8 @@ const POKEMON_TCG_CARDS = [
         ],
         "damage": 50,
         "damageText": "50×",
-        "text": "Your opponent reveals their hand. This attack does 50 damage for each Trainer card you find there."
+        "text": "Your opponent reveals their hand. This attack does 50 damage for each Trainer card you find there.",
+        "hasCoinFlip": false
       },
       {
         "name": "Hollow Dive",
@@ -488,12 +588,55 @@ const POKEMON_TCG_CARDS = [
         ],
         "damage": 110,
         "damageText": "110",
-        "text": "Put 3 damage counters on your opponent's Benched Pokémon in any way you like."
+        "text": "Put 3 damage counters on your opponent's Benched Pokémon in any way you like.",
+        "hasCoinFlip": false
       }
     ],
     "retreatCost": 1,
     "imageSmall": "https://images.pokemontcg.io/sv3pt5/94.png",
     "imageLarge": "https://images.pokemontcg.io/sv3pt5/94_hires.png"
+  },
+  {
+    "id": "sv3pt5-95",
+    "name": "Onix",
+    "hp": 120,
+    "type": "fighting",
+    "types": [
+      "Fighting"
+    ],
+    "rarity": "rare",
+    "rarityLabel": "Uncommon",
+    "isEx": false,
+    "stage": "Basic",
+    "attacks": [
+      {
+        "name": "Thumpalanche",
+        "cost": [
+          "Colorless",
+          "Colorless"
+        ],
+        "damage": 80,
+        "damageText": "80×",
+        "text": "Discard the top 5 cards of your deck. This attack does 80 damage for each Pokémon with a Retreat Cost of exactly 4 that you discarded in this way.",
+        "hasCoinFlip": false
+      },
+      {
+        "name": "Heavy Impact",
+        "cost": [
+          "Fighting",
+          "Fighting",
+          "Colorless",
+          "Colorless"
+        ],
+        "damage": 100,
+        "damageText": "100",
+        "text": "",
+        "hasCoinFlip": false
+      }
+    ],
+    "retreatCost": 4,
+    "imageSmall": "https://images.pokemontcg.io/sv3pt5/95.png",
+    "imageLarge": "https://images.pokemontcg.io/sv3pt5/95_hires.png"
   },
   {
     "id": "sv3pt5-143",
@@ -517,7 +660,8 @@ const POKEMON_TCG_CARDS = [
         ],
         "damage": 130,
         "damageText": "130",
-        "text": "This Pokémon also does 30 damage to itself."
+        "text": "This Pokémon also does 30 damage to itself.",
+        "hasCoinFlip": false
       }
     ],
     "retreatCost": 4,
@@ -546,7 +690,8 @@ const POKEMON_TCG_CARDS = [
         ],
         "damage": 110,
         "damageText": "110",
-        "text": "This attack also does 10 damage to each of your opponent's Benched Pokémon. (Don't apply Weakness and Resistance for Benched Pokémon.)"
+        "text": "This attack also does 10 damage to each of your opponent's Benched Pokémon. (Don't apply Weakness and Resistance for Benched Pokémon.)",
+        "hasCoinFlip": false
       }
     ],
     "retreatCost": 2,
@@ -575,7 +720,8 @@ const POKEMON_TCG_CARDS = [
         ],
         "damage": 120,
         "damageText": "120",
-        "text": "This attack also does 90 damage to 1 of your opponent's Benched Pokémon that has any damage counters on it. (Don't apply Weakness and Resistance for Benched Pokémon.)"
+        "text": "This attack also does 90 damage to 1 of your opponent's Benched Pokémon that has any damage counters on it. (Don't apply Weakness and Resistance for Benched Pokémon.)",
+        "hasCoinFlip": false
       }
     ],
     "retreatCost": 2,
@@ -604,7 +750,8 @@ const POKEMON_TCG_CARDS = [
         ],
         "damage": 30,
         "damageText": "30",
-        "text": "Discard 2 Fire Energy from this Pokémon. This attack does 120 damage to 1 of your opponent's Benched Pokémon. (Don't apply Weakness and Resistance for Benched Pokémon.)"
+        "text": "Discard 2 Fire Energy from this Pokémon. This attack does 120 damage to 1 of your opponent's Benched Pokémon. (Don't apply Weakness and Resistance for Benched Pokémon.)",
+        "hasCoinFlip": false
       }
     ],
     "retreatCost": 2,
@@ -632,7 +779,8 @@ const POKEMON_TCG_CARDS = [
         ],
         "damage": 180,
         "damageText": "180",
-        "text": "Discard the top 2 cards of your deck."
+        "text": "Discard the top 2 cards of your deck.",
+        "hasCoinFlip": false
       }
     ],
     "retreatCost": 3,
@@ -660,7 +808,8 @@ const POKEMON_TCG_CARDS = [
         ],
         "damage": 20,
         "damageText": "20",
-        "text": "During your opponent's next turn, if this Pokémon is damaged by an attack (even if it is Knocked Out), put damage counters on the Attacking Pokémon equal to the damage done to this Pokémon."
+        "text": "During your opponent's next turn, if this Pokémon is damaged by an attack (even if it is Knocked Out), put damage counters on the Attacking Pokémon equal to the damage done to this Pokémon.",
+        "hasCoinFlip": false
       },
       {
         "name": "Psyslash",
@@ -671,7 +820,8 @@ const POKEMON_TCG_CARDS = [
         ],
         "damage": 130,
         "damageText": "130",
-        "text": "Discard 2 Energy from this Pokémon."
+        "text": "Discard 2 Energy from this Pokémon.",
+        "hasCoinFlip": false
       }
     ],
     "retreatCost": 2,
@@ -700,7 +850,8 @@ const POKEMON_TCG_CARDS = [
         ],
         "damage": 30,
         "damageText": "30",
-        "text": "Choose 1 of your opponent's Active Pokémon's attacks and use it as this attack."
+        "text": "Choose 1 of your opponent's Active Pokémon's attacks and use it as this attack.",
+        "hasCoinFlip": false
       }
     ],
     "retreatCost": 1,
@@ -728,7 +879,8 @@ const POKEMON_TCG_CARDS = [
         ],
         "damage": 20,
         "damageText": "20",
-        "text": "Heal 20 damage from this Pokémon."
+        "text": "Heal 20 damage from this Pokémon.",
+        "hasCoinFlip": false
       }
     ],
     "retreatCost": 2,
@@ -756,7 +908,8 @@ const POKEMON_TCG_CARDS = [
         ],
         "damage": 30,
         "damageText": "30",
-        "text": "Heal 20 damage from this Pokémon."
+        "text": "Heal 20 damage from this Pokémon.",
+        "hasCoinFlip": false
       },
       {
         "name": "Vine Whip",
@@ -767,7 +920,8 @@ const POKEMON_TCG_CARDS = [
         ],
         "damage": 80,
         "damageText": "80",
-        "text": ""
+        "text": "",
+        "hasCoinFlip": false
       }
     ],
     "retreatCost": 3,
@@ -794,7 +948,8 @@ const POKEMON_TCG_CARDS = [
         ],
         "damage": 30,
         "damageText": "30",
-        "text": "Discard a Stadium in play."
+        "text": "Discard a Stadium in play.",
+        "hasCoinFlip": false
       },
       {
         "name": "Steady Firebreathing",
@@ -804,7 +959,8 @@ const POKEMON_TCG_CARDS = [
         ],
         "damage": 30,
         "damageText": "30",
-        "text": ""
+        "text": "",
+        "hasCoinFlip": false
       }
     ],
     "retreatCost": 1,
@@ -831,7 +987,8 @@ const POKEMON_TCG_CARDS = [
         ],
         "damage": 20,
         "damageText": "20",
-        "text": ""
+        "text": "",
+        "hasCoinFlip": false
       },
       {
         "name": "Fire Blast",
@@ -842,7 +999,8 @@ const POKEMON_TCG_CARDS = [
         ],
         "damage": 90,
         "damageText": "90",
-        "text": "Discard an Energy from this Pokémon."
+        "text": "Discard an Energy from this Pokémon.",
+        "hasCoinFlip": false
       }
     ],
     "retreatCost": 2,
@@ -869,7 +1027,8 @@ const POKEMON_TCG_CARDS = [
         ],
         "damage": 30,
         "damageText": "30",
-        "text": "Flip a coin. If heads, during your opponent's next turn, prevent all damage done to this Pokémon by attacks."
+        "text": "Flip a coin. If heads, during your opponent's next turn, prevent all damage done to this Pokémon by attacks.",
+        "hasCoinFlip": true
       },
       {
         "name": "Skull Bash",
@@ -879,7 +1038,8 @@ const POKEMON_TCG_CARDS = [
         ],
         "damage": 20,
         "damageText": "20",
-        "text": ""
+        "text": "",
+        "hasCoinFlip": false
       }
     ],
     "retreatCost": 1,
@@ -906,7 +1066,8 @@ const POKEMON_TCG_CARDS = [
         ],
         "damage": 30,
         "damageText": "30",
-        "text": "Put up to 3 Basic Water Energy cards from your discard pile into your hand."
+        "text": "Put up to 3 Basic Water Energy cards from your discard pile into your hand.",
+        "hasCoinFlip": false
       },
       {
         "name": "Spinning Attack",
@@ -916,7 +1077,8 @@ const POKEMON_TCG_CARDS = [
         ],
         "damage": 50,
         "damageText": "50",
-        "text": ""
+        "text": "",
+        "hasCoinFlip": false
       }
     ],
     "retreatCost": 2,
@@ -943,7 +1105,8 @@ const POKEMON_TCG_CARDS = [
         ],
         "damage": 30,
         "damageText": "30",
-        "text": "Search your deck for a Basic Lightning Energy card and attach it to this Pokémon. Then, shuffle your deck."
+        "text": "Search your deck for a Basic Lightning Energy card and attach it to this Pokémon. Then, shuffle your deck.",
+        "hasCoinFlip": false
       },
       {
         "name": "Pika Punch",
@@ -954,7 +1117,8 @@ const POKEMON_TCG_CARDS = [
         ],
         "damage": 50,
         "damageText": "50",
-        "text": ""
+        "text": "",
+        "hasCoinFlip": false
       }
     ],
     "retreatCost": 1,
@@ -983,7 +1147,8 @@ const POKEMON_TCG_CARDS = [
         ],
         "damage": 150,
         "damageText": "150",
-        "text": "Your opponent's Active Pokémon is now Confused and Poisoned."
+        "text": "Your opponent's Active Pokémon is now Confused and Poisoned.",
+        "hasCoinFlip": false
       }
     ],
     "retreatCost": 4,
@@ -1010,7 +1175,8 @@ const POKEMON_TCG_CARDS = [
         ],
         "damage": 60,
         "damageText": "60+",
-        "text": "If this Pokémon has any damage counters on it, this attack does 100 more damage."
+        "text": "If this Pokémon has any damage counters on it, this attack does 100 more damage.",
+        "hasCoinFlip": true
       },
       {
         "name": "Explosive Vortex",
@@ -1022,7 +1188,8 @@ const POKEMON_TCG_CARDS = [
         ],
         "damage": 330,
         "damageText": "330",
-        "text": "Discard 3 Energy from this Pokémon."
+        "text": "Discard 3 Energy from this Pokémon.",
+        "hasCoinFlip": false
       }
     ],
     "retreatCost": 2,
@@ -1050,7 +1217,8 @@ const POKEMON_TCG_CARDS = [
         ],
         "damage": 140,
         "damageText": "140×",
-        "text": "Discard up to 2 Basic Water Energy cards from your hand. This attack does 140 damage for each card you discarded in this way."
+        "text": "Discard up to 2 Basic Water Energy cards from your hand. This attack does 140 damage for each card you discarded in this way.",
+        "hasCoinFlip": false
       }
     ],
     "retreatCost": 3,
@@ -1078,7 +1246,8 @@ const POKEMON_TCG_CARDS = [
         ],
         "damage": 90,
         "damageText": "90+",
-        "text": "This attack does 30 more damage for each of your opponent's Benched Pokémon."
+        "text": "This attack does 30 more damage for each of your opponent's Benched Pokémon.",
+        "hasCoinFlip": true
       },
       {
         "name": "Dimensional Hand",
@@ -1088,12 +1257,53 @@ const POKEMON_TCG_CARDS = [
         ],
         "damage": 120,
         "damageText": "120",
-        "text": "This attack can be used even if this Pokémon is on the Bench."
+        "text": "This attack can be used even if this Pokémon is on the Bench.",
+        "hasCoinFlip": false
       }
     ],
     "retreatCost": 1,
     "imageSmall": "https://images.pokemontcg.io/sv3pt5/188.png",
     "imageLarge": "https://images.pokemontcg.io/sv3pt5/188_hires.png"
+  },
+  {
+    "id": "sv3pt5-189",
+    "name": "Golem ex",
+    "hp": 330,
+    "type": "fighting",
+    "types": [
+      "Fighting"
+    ],
+    "rarity": "legendary",
+    "rarityLabel": "Ultra Rare",
+    "isEx": true,
+    "stage": "Stage 2",
+    "attacks": [
+      {
+        "name": "Dynamic Roll",
+        "cost": [
+          "Fighting"
+        ],
+        "damage": 50,
+        "damageText": "50",
+        "text": "During your next turn, attacks used by this Pokémon do 120 more damage to your opponent's Active Pokémon (before applying Weakness and Resistance).",
+        "hasCoinFlip": false
+      },
+      {
+        "name": "Rock Blaster",
+        "cost": [
+          "Fighting",
+          "Colorless",
+          "Colorless"
+        ],
+        "damage": 180,
+        "damageText": "180",
+        "text": "This attack's damage isn't affected by Resistance.",
+        "hasCoinFlip": false
+      }
+    ],
+    "retreatCost": 4,
+    "imageSmall": "https://images.pokemontcg.io/sv3pt5/189.png",
+    "imageLarge": "https://images.pokemontcg.io/sv3pt5/189_hires.png"
   },
   {
     "id": "sv3pt5-192",
@@ -1117,7 +1327,8 @@ const POKEMON_TCG_CARDS = [
         ],
         "damage": 120,
         "damageText": "120",
-        "text": "This attack also does 90 damage to 1 of your opponent's Benched Pokémon that has any damage counters on it. (Don't apply Weakness and Resistance for Benched Pokémon.)"
+        "text": "This attack also does 90 damage to 1 of your opponent's Benched Pokémon that has any damage counters on it. (Don't apply Weakness and Resistance for Benched Pokémon.)",
+        "hasCoinFlip": false
       }
     ],
     "retreatCost": 2,
@@ -1146,7 +1357,8 @@ const POKEMON_TCG_CARDS = [
         ],
         "damage": 30,
         "damageText": "30",
-        "text": "Choose 1 of your opponent's Active Pokémon's attacks and use it as this attack."
+        "text": "Choose 1 of your opponent's Active Pokémon's attacks and use it as this attack.",
+        "hasCoinFlip": false
       }
     ],
     "retreatCost": 1,
@@ -1175,7 +1387,8 @@ const POKEMON_TCG_CARDS = [
         ],
         "damage": 150,
         "damageText": "150",
-        "text": "Your opponent's Active Pokémon is now Confused and Poisoned."
+        "text": "Your opponent's Active Pokémon is now Confused and Poisoned.",
+        "hasCoinFlip": false
       }
     ],
     "retreatCost": 4,
@@ -1202,7 +1415,8 @@ const POKEMON_TCG_CARDS = [
         ],
         "damage": 60,
         "damageText": "60+",
-        "text": "If this Pokémon has any damage counters on it, this attack does 100 more damage."
+        "text": "If this Pokémon has any damage counters on it, this attack does 100 more damage.",
+        "hasCoinFlip": true
       },
       {
         "name": "Explosive Vortex",
@@ -1214,7 +1428,8 @@ const POKEMON_TCG_CARDS = [
         ],
         "damage": 330,
         "damageText": "330",
-        "text": "Discard 3 Energy from this Pokémon."
+        "text": "Discard 3 Energy from this Pokémon.",
+        "hasCoinFlip": false
       }
     ],
     "retreatCost": 2,
@@ -1242,7 +1457,8 @@ const POKEMON_TCG_CARDS = [
         ],
         "damage": 140,
         "damageText": "140×",
-        "text": "Discard up to 2 Basic Water Energy cards from your hand. This attack does 140 damage for each card you discarded in this way."
+        "text": "Discard up to 2 Basic Water Energy cards from your hand. This attack does 140 damage for each card you discarded in this way.",
+        "hasCoinFlip": false
       }
     ],
     "retreatCost": 3,
@@ -1270,7 +1486,8 @@ const POKEMON_TCG_CARDS = [
         ],
         "damage": 90,
         "damageText": "90+",
-        "text": "This attack does 30 more damage for each of your opponent's Benched Pokémon."
+        "text": "This attack does 30 more damage for each of your opponent's Benched Pokémon.",
+        "hasCoinFlip": true
       },
       {
         "name": "Dimensional Hand",
@@ -1280,7 +1497,8 @@ const POKEMON_TCG_CARDS = [
         ],
         "damage": 120,
         "damageText": "120",
-        "text": "This attack can be used even if this Pokémon is on the Bench."
+        "text": "This attack can be used even if this Pokémon is on the Bench.",
+        "hasCoinFlip": false
       }
     ],
     "retreatCost": 1,
@@ -1309,7 +1527,8 @@ const POKEMON_TCG_CARDS = [
         ],
         "damage": 120,
         "damageText": "120",
-        "text": "This attack also does 90 damage to 1 of your opponent's Benched Pokémon that has any damage counters on it. (Don't apply Weakness and Resistance for Benched Pokémon.)"
+        "text": "This attack also does 90 damage to 1 of your opponent's Benched Pokémon that has any damage counters on it. (Don't apply Weakness and Resistance for Benched Pokémon.)",
+        "hasCoinFlip": false
       }
     ],
     "retreatCost": 2,
@@ -1338,7 +1557,8 @@ const POKEMON_TCG_CARDS = [
         ],
         "damage": 30,
         "damageText": "30",
-        "text": "Choose 1 of your opponent's Active Pokémon's attacks and use it as this attack."
+        "text": "Choose 1 of your opponent's Active Pokémon's attacks and use it as this attack.",
+        "hasCoinFlip": false
       }
     ],
     "retreatCost": 1,
@@ -1366,7 +1586,8 @@ const POKEMON_TCG_CARDS = [
         ],
         "damage": 30,
         "damageText": "30",
-        "text": "This attack does 50 damage to 1 of your opponent's Pokémon. (Don't apply Weakness and Resistance for Benched Pokémon.)"
+        "text": "This attack does 50 damage to 1 of your opponent's Pokémon. (Don't apply Weakness and Resistance for Benched Pokémon.)",
+        "hasCoinFlip": false
       },
       {
         "name": "Fire Blast",
@@ -1377,7 +1598,8 @@ const POKEMON_TCG_CARDS = [
         ],
         "damage": 120,
         "damageText": "120",
-        "text": "Discard an Energy from this Pokémon."
+        "text": "Discard an Energy from this Pokémon.",
+        "hasCoinFlip": false
       }
     ],
     "retreatCost": 2,
@@ -1405,7 +1627,8 @@ const POKEMON_TCG_CARDS = [
         ],
         "damage": 30,
         "damageText": "30",
-        "text": "This attack does 20 damage to each of your opponent's Benched Pokémon. (Don't apply Weakness and Resistance for Benched Pokémon.)"
+        "text": "This attack does 20 damage to each of your opponent's Benched Pokémon. (Don't apply Weakness and Resistance for Benched Pokémon.)",
+        "hasCoinFlip": false
       },
       {
         "name": "Black Flame",
@@ -1416,7 +1639,8 @@ const POKEMON_TCG_CARDS = [
         ],
         "damage": 80,
         "damageText": "80+",
-        "text": "If Zekrom is on your Bench, this attack does 80 more damage."
+        "text": "If Zekrom is on your Bench, this attack does 80 more damage.",
+        "hasCoinFlip": true
       }
     ],
     "retreatCost": 3,
@@ -1445,7 +1669,8 @@ const POKEMON_TCG_CARDS = [
         ],
         "damage": 30,
         "damageText": "30",
-        "text": "Discard the top 5 cards of your deck, and then choose 2 of your opponent's Benched Pokémon. This attack does 50 damage for each Energy card you discarded in this way to each of those Pokémon. (Don't apply Weakness and Resistance for Benched Pokémon.)"
+        "text": "Discard the top 5 cards of your deck, and then choose 2 of your opponent's Benched Pokémon. This attack does 50 damage for each Energy card you discarded in this way to each of those Pokémon. (Don't apply Weakness and Resistance for Benched Pokémon.)",
+        "hasCoinFlip": false
       },
       {
         "name": "Surf",
@@ -1457,7 +1682,8 @@ const POKEMON_TCG_CARDS = [
         ],
         "damage": 120,
         "damageText": "120",
-        "text": ""
+        "text": "",
+        "hasCoinFlip": false
       }
     ],
     "retreatCost": 3,
@@ -1486,7 +1712,8 @@ const POKEMON_TCG_CARDS = [
         ],
         "damage": 80,
         "damageText": "80+",
-        "text": "During your next turn, this Pokémon's Overdrive Smash attack does 80 more damage (before applying Weakness and Resistance)."
+        "text": "During your next turn, this Pokémon's Overdrive Smash attack does 80 more damage (before applying Weakness and Resistance).",
+        "hasCoinFlip": true
       }
     ],
     "retreatCost": 2,
@@ -1513,7 +1740,8 @@ const POKEMON_TCG_CARDS = [
         ],
         "damage": 10,
         "damageText": "10",
-        "text": ""
+        "text": "",
+        "hasCoinFlip": false
       },
       {
         "name": "Thunder Jolt",
@@ -1523,7 +1751,8 @@ const POKEMON_TCG_CARDS = [
         ],
         "damage": 30,
         "damageText": "30",
-        "text": "Flip a coin. If tails, this Pokémon also does 10 damage to itself."
+        "text": "Flip a coin. If tails, this Pokémon also does 10 damage to itself.",
+        "hasCoinFlip": true
       }
     ],
     "retreatCost": 1,
@@ -1550,7 +1779,8 @@ const POKEMON_TCG_CARDS = [
         ],
         "damage": 20,
         "damageText": "20",
-        "text": "Flip a coin. If heads, your opponent's Active Pokémon is now Paralyzed."
+        "text": "Flip a coin. If heads, your opponent's Active Pokémon is now Paralyzed.",
+        "hasCoinFlip": true
       },
       {
         "name": "Fly",
@@ -1561,7 +1791,8 @@ const POKEMON_TCG_CARDS = [
         ],
         "damage": 120,
         "damageText": "120",
-        "text": "Flip a coin. If tails, this attack does nothing. If heads, during your opponent's next turn, prevent all damage from and effects of attacks done to this Pokémon."
+        "text": "Flip a coin. If tails, this attack does nothing. If heads, during your opponent's next turn, prevent all damage from and effects of attacks done to this Pokémon.",
+        "hasCoinFlip": true
       }
     ],
     "retreatCost": 1,
@@ -1590,7 +1821,8 @@ const POKEMON_TCG_CARDS = [
         ],
         "damage": 160,
         "damageText": "160",
-        "text": "During your opponent's next turn, prevent all damage done to this Pokémon by attacks from Basic Pokémon."
+        "text": "During your opponent's next turn, prevent all damage done to this Pokémon by attacks from Basic Pokémon.",
+        "hasCoinFlip": false
       }
     ],
     "retreatCost": 1,
@@ -1619,7 +1851,8 @@ const POKEMON_TCG_CARDS = [
         ],
         "damage": 150,
         "damageText": "150",
-        "text": ""
+        "text": "",
+        "hasCoinFlip": false
       }
     ],
     "retreatCost": 1,
@@ -1648,7 +1881,8 @@ const POKEMON_TCG_CARDS = [
         ],
         "damage": 160,
         "damageText": "160",
-        "text": "This attack also does 30 damage to each of your opponent's Benched Pokémon. (Don't apply Weakness and Resistance for Benched Pokémon.)"
+        "text": "This attack also does 30 damage to each of your opponent's Benched Pokémon. (Don't apply Weakness and Resistance for Benched Pokémon.)",
+        "hasCoinFlip": false
       }
     ],
     "retreatCost": 1,
@@ -1676,7 +1910,8 @@ const POKEMON_TCG_CARDS = [
         ],
         "damage": 30,
         "damageText": "30",
-        "text": "If your opponent has a Stadium in play, discard it."
+        "text": "If your opponent has a Stadium in play, discard it.",
+        "hasCoinFlip": false
       },
       {
         "name": "White Thunder",
@@ -1687,7 +1922,8 @@ const POKEMON_TCG_CARDS = [
         ],
         "damage": 80,
         "damageText": "80+",
-        "text": "If Reshiram is on your Bench, this attack does 80 more damage."
+        "text": "If Reshiram is on your Bench, this attack does 80 more damage.",
+        "hasCoinFlip": true
       }
     ],
     "retreatCost": 3,
@@ -1715,7 +1951,8 @@ const POKEMON_TCG_CARDS = [
         ],
         "damage": 30,
         "damageText": "30",
-        "text": ""
+        "text": "",
+        "hasCoinFlip": false
       }
     ],
     "retreatCost": 1,
@@ -1744,7 +1981,8 @@ const POKEMON_TCG_CARDS = [
         ],
         "damage": 80,
         "damageText": "80×",
-        "text": "Discard the top 5 cards of your deck. This attack does 80 damage for each Energy card you discarded in this way."
+        "text": "Discard the top 5 cards of your deck. This attack does 80 damage for each Energy card you discarded in this way.",
+        "hasCoinFlip": false
       },
       {
         "name": "Massive Rend",
@@ -1756,7 +1994,8 @@ const POKEMON_TCG_CARDS = [
         ],
         "damage": 120,
         "damageText": "120",
-        "text": ""
+        "text": "",
+        "hasCoinFlip": false
       }
     ],
     "retreatCost": 3,
@@ -1783,7 +2022,8 @@ const POKEMON_TCG_CARDS = [
         ],
         "damage": 30,
         "damageText": "30",
-        "text": "Put a card from your discard pile into your hand."
+        "text": "Put a card from your discard pile into your hand.",
+        "hasCoinFlip": false
       },
       {
         "name": "Metal Blast",
@@ -1794,7 +2034,8 @@ const POKEMON_TCG_CARDS = [
         ],
         "damage": 60,
         "damageText": "60+",
-        "text": "This attack does 20 more damage for each Metal Energy attached to this Pokémon."
+        "text": "This attack does 20 more damage for each Metal Energy attached to this Pokémon.",
+        "hasCoinFlip": true
       }
     ],
     "retreatCost": 2,
@@ -1822,7 +2063,8 @@ const POKEMON_TCG_CARDS = [
         ],
         "damage": 20,
         "damageText": "20×",
-        "text": "This attack does 20 damage for each Energy attached to both Active Pokémon."
+        "text": "This attack does 20 damage for each Energy attached to both Active Pokémon.",
+        "hasCoinFlip": false
       },
       {
         "name": "Deep Crush",
@@ -1834,7 +2076,8 @@ const POKEMON_TCG_CARDS = [
         ],
         "damage": 160,
         "damageText": "160",
-        "text": "During your next turn, this Pokémon can't attack."
+        "text": "During your next turn, this Pokémon can't attack.",
+        "hasCoinFlip": false
       }
     ],
     "retreatCost": 2,
@@ -1862,7 +2105,8 @@ const POKEMON_TCG_CARDS = [
         ],
         "damage": 30,
         "damageText": "30",
-        "text": ""
+        "text": "",
+        "hasCoinFlip": false
       }
     ],
     "retreatCost": 1,
@@ -1871,7 +2115,7 @@ const POKEMON_TCG_CARDS = [
   }
 ];
 
-// 3 Booster Packs inspired by Pokémon TCG Pocket
+// 3 Booster Packs
 const BOOSTER_PACKS = [
   {
     id: 'pack_151',
@@ -1880,7 +2124,7 @@ const BOOSTER_PACKS = [
     tag: '🔥 Phổ Biến Nhất',
     cost: 100,
     cardCount: 5,
-    coverCardImage: 'https://images.pokemontcg.io/sv3pt5/6_hires.png',
+    coverCardImage: 'https://images.pokemontcg.io/sv3pt5/6.png',
     color: 'from-amber-600 via-rose-600 to-indigo-900',
     border: 'border-amber-400/50',
     rates: { common: 0.50, rare: 0.30, epic: 0.14, legendary: 0.05, mythic: 0.01 }
@@ -1892,7 +2136,7 @@ const BOOSTER_PACKS = [
     tag: '👑 Đảm Bảo Thẻ EX/Hiếm',
     cost: 250,
     cardCount: 5,
-    coverCardImage: 'https://images.pokemontcg.io/cel25/25_hires.png',
+    coverCardImage: 'https://images.pokemontcg.io/cel25/25.png',
     color: 'from-purple-900 via-indigo-900 to-amber-900',
     border: 'border-purple-400/50',
     rates: { common: 0.20, rare: 0.35, epic: 0.28, legendary: 0.14, mythic: 0.03 }
@@ -1904,21 +2148,22 @@ const BOOSTER_PACKS = [
     tag: '✨ Tỷ Lệ Thần Thoại Cực Cao',
     cost: 500,
     cardCount: 5,
-    coverCardImage: 'https://images.pokemontcg.io/sv3pt5/205_hires.png',
+    coverCardImage: 'https://images.pokemontcg.io/sv3pt5/205.png',
     color: 'from-amber-500 via-yellow-600 to-rose-900',
     border: 'border-amber-300',
     rates: { rare: 0.30, epic: 0.35, legendary: 0.25, mythic: 0.10 }
   }
 ];
 
-// Gym Leaders for TCG Battle Arena
+// Gym Leaders with Verified Image Badges & Signature Pokemon
 const GYM_LEADERS = [
   {
     id: 'brock',
     name: 'Brock',
     gym: 'Pewter Gym (Đá Cứng)',
-    avatar: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/trainers/brock.png',
-    deckCardId: 'sv3pt5-74',
+    badgeImg: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/badges/1.png',
+    avatarImg: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/95.png',
+    deckCardId: 'sv3pt5-95',
     difficulty: 'Tập Sự',
     rewardCoins: 120,
     rewardExp: 60
@@ -1927,7 +2172,8 @@ const GYM_LEADERS = [
     id: 'misty',
     name: 'Misty',
     gym: 'Cerulean Gym (Nàng Tiên Nước)',
-    avatar: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/trainers/misty.png',
+    badgeImg: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/badges/2.png',
+    avatarImg: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/121.png',
     deckCardId: 'sv3pt5-9',
     difficulty: 'Trung Bình',
     rewardCoins: 200,
@@ -1936,8 +2182,9 @@ const GYM_LEADERS = [
   {
     id: 'surge',
     name: 'Lt. Surge',
-    gym: 'Vermilion Gym (Sĩ Quan Tia Chớp)',
-    avatar: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/trainers/surge.png',
+    gym: 'Vermilion Gym (Tia Chớp)',
+    badgeImg: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/badges/3.png',
+    avatarImg: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/26.png',
     deckCardId: 'sv3pt5-25',
     difficulty: 'Khó',
     rewardCoins: 280,
@@ -1947,7 +2194,8 @@ const GYM_LEADERS = [
     id: 'sabrina',
     name: 'Sabrina',
     gym: 'Saffron Gym (Bậc Thầy Siêu Năng)',
-    avatar: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/trainers/sabrina.png',
+    badgeImg: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/badges/6.png',
+    avatarImg: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/65.png',
     deckCardId: 'sv3pt5-65',
     difficulty: 'Cực Khó',
     rewardCoins: 400,
@@ -1957,11 +2205,82 @@ const GYM_LEADERS = [
     id: 'red',
     name: 'Quán Quân Red',
     gym: 'Đỉnh Núi Bạc (Champion Red)',
-    avatar: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/trainers/red.png',
+    badgeImg: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/badges/8.png',
+    avatarImg: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/6.png',
     deckCardId: 'sv3pt5-199',
     difficulty: 'Huyền Thoại',
     rewardCoins: 800,
     rewardExp: 500
+  }
+];
+
+// Top Global Leaderboard Rankings
+const TOP_LEADERBOARD = [
+  {
+    rank: 1,
+    name: 'Quán Quân Red',
+    title: 'Huyền Thoại Núi Bạc',
+    avatar: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/6.png',
+    elo: 2850,
+    tier: 'Bậc Thầy Tối Cao',
+    tierColor: 'text-amber-400 bg-amber-500/20 border-amber-400/50',
+    winRate: '92%',
+    signatureCard: 'Charizard ex'
+  },
+  {
+    rank: 2,
+    name: 'Cynthia',
+    title: 'Nữ Quán Quân Sinnoh',
+    avatar: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/448.png',
+    elo: 2790,
+    tier: 'Đại Cao Thủ',
+    tierColor: 'text-purple-300 bg-purple-500/20 border-purple-400/50',
+    winRate: '88%',
+    signatureCard: 'Garchomp & Lucario'
+  },
+  {
+    rank: 3,
+    name: 'Leon',
+    title: 'Bất Bại Galar Champion',
+    avatar: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/250.png',
+    elo: 2720,
+    tier: 'Đại Cao Thủ',
+    tierColor: 'text-purple-300 bg-purple-500/20 border-purple-400/50',
+    winRate: '85%',
+    signatureCard: 'Ho-Oh & Charizard'
+  },
+  {
+    rank: 4,
+    name: 'Steven Stone',
+    title: 'Quán Quân Đá Quý Hoenn',
+    avatar: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/384.png',
+    elo: 2650,
+    tier: 'Kim Cương I',
+    tierColor: 'text-cyan-300 bg-cyan-500/20 border-cyan-400/50',
+    winRate: '81%',
+    signatureCard: 'Rayquaza'
+  },
+  {
+    rank: 5,
+    name: 'Blue',
+    title: 'Kỳ Phùng Địch Thủ Kanto',
+    avatar: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/9.png',
+    elo: 2580,
+    tier: 'Kim Cương II',
+    tierColor: 'text-cyan-300 bg-cyan-500/20 border-cyan-400/50',
+    winRate: '79%',
+    signatureCard: 'Blastoise ex'
+  },
+  {
+    rank: 6,
+    name: 'Lance',
+    title: 'Long Vương Tứ Đại Thiên Vương',
+    avatar: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/149.png',
+    elo: 2510,
+    tier: 'Bạch Kim I',
+    tierColor: 'text-indigo-300 bg-indigo-500/20 border-indigo-400/50',
+    winRate: '76%',
+    signatureCard: 'Dragonite'
   }
 ];
 

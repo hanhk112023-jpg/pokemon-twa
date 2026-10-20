@@ -79,36 +79,38 @@ class GachaSystem {
 
     const container = document.getElementById("pack-stage-container");
     container.innerHTML = `
-      <div id="pack-foil-wrapper" class="booster-pack-3d bg-gradient-to-b ${pack.color} border-2 ${pack.border} flex flex-col justify-between p-4 shadow-2xl" onclick="gachaSystem.ripFoil()">
+      <div id=\"pack-foil-wrapper\" class=\"booster-pack-3d bg-gradient-to-b ${pack.color} border-2 ${pack.border} flex flex-col justify-between p-4 shadow-2xl\" onclick=\"gachaSystem.ripFoil()\">
         <!-- Top crimp -->
-        <div id="pack-crimp-top" class="booster-pack-top-crimp"></div>
+        <div id=\"pack-crimp-top\" class=\"booster-pack-top-crimp\"></div>
 
         <!-- Pack Art & Logo -->
-        <div class="text-center pt-5 z-10">
-          <span class="inline-block px-3 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-black/60 text-amber-300 border border-amber-400/40 shadow">
+        <div class=\"text-center pt-5 z-10\">
+          <span class=\"inline-block px-3 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-black/60 text-amber-300 border border-amber-400/40 shadow\">
             ${pack.tag}
           </span>
-          <h3 class="text-white font-black text-lg drop-shadow-md mt-1 tracking-wide">${pack.name}</h3>
-          <p class="text-[11px] text-amber-200/90 font-medium">${pack.subtitle}</p>
+          <h3 class=\"text-white font-black text-lg drop-shadow-md mt-1 tracking-wide\">${pack.name}</h3>
+          <p class=\"text-[11px] text-amber-200/90 font-medium\">${pack.subtitle}</p>
         </div>
 
         <!-- Center Foil Art -->
-        <div class="my-auto relative flex items-center justify-center p-2 z-10">
-          <div class="w-36 h-48 rounded-xl overflow-hidden shadow-2xl border-2 border-white/20 transform -rotate-3 hover:rotate-0 transition-transform duration-300">
-            <img src="${pack.coverCardImage}" class="w-full h-full object-cover filter drop-shadow" />
+        <div class=\"my-auto relative flex items-center justify-center p-2 z-10\">
+          <div class=\"w-36 h-48 rounded-xl overflow-hidden shadow-2xl border-2 border-white/20 transform -rotate-3 hover:rotate-0 transition-transform duration-300\">
+            <img src=\"${pack.coverCardImage}\" 
+                 onerror=\"this.onerror=null; this.src='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/6.png'\"
+                 class=\"w-full h-full object-cover filter drop-shadow\" />
           </div>
         </div>
 
         <!-- Bottom Action CTA -->
-        <div class="text-center pb-5 z-10">
-          <div class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-black/70 border border-amber-400/60 text-amber-300 font-extrabold text-xs shadow-lg animate-bounce">
+        <div class=\"text-center pb-5 z-10\">
+          <div class=\"inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-black/70 border border-amber-400/60 text-amber-300 font-extrabold text-xs shadow-lg animate-bounce\">
             <span>✂️ Chạm Hoặc Quẹt Để Xé Bao</span>
           </div>
-          <p class="text-[10px] text-slate-300 mt-1.5 font-medium">5 Thẻ Pokémon TCG Chính Hãng</p>
+          <p class=\"text-[10px] text-slate-300 mt-1.5 font-medium\">5 Thẻ Pokémon TCG Chính Hãng</p>
         </div>
 
         <!-- Bottom crimp -->
-        <div id="pack-crimp-bottom" class="booster-pack-bottom-crimp"></div>
+        <div id=\"pack-crimp-bottom\" class=\"booster-pack-bottom-crimp\"></div>
       </div>
     `;
   }
@@ -134,30 +136,30 @@ class GachaSystem {
   displayCardsReveal() {
     const container = document.getElementById("pack-stage-container");
     container.innerHTML = `
-      <div class="w-full max-w-sm flex flex-col items-center">
+      <div class=\"w-full max-w-sm flex flex-col items-center\">
         <!-- Title & Counter -->
-        <div class="text-center mb-3">
-          <h4 class="text-white font-extrabold text-base tracking-wide flex items-center justify-center gap-2">
+        <div class=\"text-center mb-3\">
+          <h4 class=\"text-white font-extrabold text-base tracking-wide flex items-center justify-center gap-2\">
             <span>✨ Chạm Vào Thẻ Để Lật Mở</span>
-            <span id="reveal-counter" class="text-xs px-2.5 py-0.5 rounded-full bg-amber-400/20 text-amber-300 border border-amber-400/30 font-mono">
+            <span id=\"reveal-counter\" class=\"text-xs px-2.5 py-0.5 rounded-full bg-amber-400/20 text-amber-300 border border-amber-400/30 font-mono\">
               0/${this.openedCards.length}
             </span>
           </h4>
         </div>
 
         <!-- Stack of 5 Cards -->
-        <div id="cards-stack-area" class="relative w-64 h-96 flex items-center justify-center perspective-1000">
+        <div id=\"cards-stack-area\" class=\"relative w-64 h-96 flex items-center justify-center perspective-1000\">
           ${this.openedCards.map((card, idx) => this.renderFlippableTcgCard(card, idx)).join("")}
         </div>
 
         <!-- Action Controls -->
-        <div class="flex items-center gap-3 mt-6 w-full px-4">
-          <button onclick="gachaSystem.flipAll()" 
-                  class="flex-1 py-3 px-4 rounded-2xl font-black text-xs uppercase tracking-wider bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 active:scale-95 transition-all shadow-lg flex items-center justify-center gap-1.5">
+        <div class=\"flex items-center gap-3 mt-6 w-full px-4\">
+          <button onclick=\"gachaSystem.flipAll()\" 
+                  class=\"flex-1 py-3 px-4 rounded-2xl font-black text-xs uppercase tracking-wider bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 active:scale-95 transition-all shadow-lg flex items-center justify-center gap-1.5\">
             <span>⚡ Lật Tất Cả</span>
           </button>
-          <button id="btn-collect-all" onclick="gachaSystem.finishOpening()" 
-                  class="hidden flex-1 py-3 px-4 rounded-2xl font-black text-xs uppercase tracking-wider bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 active:scale-95 transition-all shadow-xl shadow-amber-500/30 flex items-center justify-center gap-1.5 animate-pulse">
+          <button id=\"btn-collect-all\" onclick=\"gachaSystem.finishOpening()\" 
+                  class=\"hidden flex-1 py-3 px-4 rounded-2xl font-black text-xs uppercase tracking-wider bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 active:scale-95 transition-all shadow-xl shadow-amber-500/30 flex items-center justify-center gap-1.5 animate-pulse\">
             <span>Thu Thập Hết 🌟</span>
           </button>
         </div>
@@ -177,42 +179,43 @@ class GachaSystem {
     const scale = 1 - idx * 0.03;
 
     return `
-      <div id="tcg-reveal-card-${idx}" 
-           class="absolute inset-0 select-none cursor-pointer transition-transform duration-300"
-           style="z-index: ${zIndex}; transform: translateY(${offset}px) scale(${scale});"
-           onclick="gachaSystem.flipCard(${idx})">
+      <div id=\"tcg-reveal-card-${idx}\" 
+           class=\"absolute inset-0 select-none cursor-pointer transition-transform duration-300\"
+           style=\"z-index: ${zIndex}; transform: translateY(${offset}px) scale(${scale});\"
+           onclick=\"gachaSystem.flipCard(${idx})\">
         
-        <div id="tcg-card-inner-${idx}" class="relative w-full h-full transform-style-preserve-3d transition-transform duration-500 rounded-2xl shadow-2xl tcg-card-frame">
+        <div id=\"tcg-card-inner-${idx}\" class=\"relative w-full h-full transform-style-preserve-3d transition-transform duration-500 rounded-2xl shadow-2xl tcg-card-frame\">
           
           <!-- Card Back Face: Official Classic TCG Back -->
-          <div class="absolute inset-0 backface-hidden rounded-2xl border-2 border-amber-400/40 p-2 flex flex-col items-center justify-center shadow-2xl overflow-hidden bg-gradient-to-br from-indigo-950 via-slate-900 to-blue-950">
-            <div class="w-full h-full rounded-xl border border-white/20 flex flex-col items-center justify-center relative overflow-hidden bg-[#182346]">
-              <div class="w-28 h-28 rounded-full border-4 border-amber-400/80 bg-red-600/95 flex flex-col items-center justify-center shadow-xl relative overflow-hidden">
-                <div class="w-full h-1/2 bg-red-600"></div>
-                <div class="w-full h-1/2 bg-white"></div>
-                <div class="absolute inset-x-0 h-2.5 bg-slate-900 top-1/2 -translate-y-1/2"></div>
-                <div class="absolute w-9 h-9 rounded-full bg-white border-4 border-slate-900 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center shadow-md">
-                  <div class="w-3 h-3 rounded-full bg-slate-900"></div>
+          <div class=\"absolute inset-0 backface-hidden rounded-2xl border-2 border-amber-400/40 p-2 flex flex-col items-center justify-center shadow-2xl overflow-hidden bg-gradient-to-br from-indigo-950 via-slate-900 to-blue-950\">
+            <div class=\"w-full h-full rounded-xl border border-white/20 flex flex-col items-center justify-center relative overflow-hidden bg-[#182346]\">
+              <div class=\"w-28 h-28 rounded-full border-4 border-amber-400/80 bg-red-600/95 flex flex-col items-center justify-center shadow-xl relative overflow-hidden\">
+                <div class=\"w-full h-1/2 bg-red-600\"></div>
+                <div class=\"w-full h-1/2 bg-white\"></div>
+                <div class=\"absolute inset-x-0 h-2.5 bg-slate-900 top-1/2 -translate-y-1/2\"></div>
+                <div class=\"absolute w-9 h-9 rounded-full bg-white border-4 border-slate-900 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center shadow-md\">
+                  <div class=\"w-3 h-3 rounded-full bg-slate-900\"></div>
                 </div>
               </div>
-              <span class="mt-4 text-[11px] font-black tracking-widest text-amber-300 uppercase">POKÉMON TCG</span>
+              <span class=\"mt-4 text-[11px] font-black tracking-widest text-amber-300 uppercase\">POKÉMON TCG</span>
             </div>
           </div>
 
           <!-- Card Front Face: Real Official TCG Card Art Scan -->
-          <div class="absolute inset-0 backface-hidden rotate-y-180 rounded-2xl overflow-hidden shadow-2xl">
-            <img src="${card.imageLarge}" 
-                 loading="lazy" 
-                 class="w-full h-full object-cover rounded-2xl filter drop-shadow-md" />
+          <div class=\"absolute inset-0 backface-hidden rotate-y-180 rounded-2xl overflow-hidden shadow-2xl\">
+            <img src=\"${card.imageLarge}\" 
+                 loading=\"lazy\" 
+                 onerror=\"this.onerror=null; this.src='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png'\"
+                 class=\"w-full h-full object-cover rounded-2xl filter drop-shadow-md\" />
 
             <!-- Holographic Foil Overlay -->
-            <div class="holo-card-overlay ${card.rarity === 'mythic' ? 'holo-mythic' : card.rarity === 'legendary' ? 'holo-legendary' : ''}"></div>
+            <div class=\"holo-card-overlay ${card.rarity === 'mythic' ? 'holo-mythic' : card.rarity === 'legendary' ? 'holo-legendary' : ''}\"></div>
             
             <!-- Mouse/Touch Glare Light -->
-            <div class="card-glare" id="glare-${idx}"></div>
+            <div class=\"card-glare\" id=\"glare-${idx}\"></div>
 
             <!-- Rarity Badge Top Right -->
-            <div class="absolute top-2 right-2 px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-black/75 text-amber-300 border border-amber-400/50 shadow">
+            <div class=\"absolute top-2 right-2 px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-black/75 text-amber-300 border border-amber-400/50 shadow\">
               ${card.rarityLabel || card.rarity}
             </div>
           </div>
