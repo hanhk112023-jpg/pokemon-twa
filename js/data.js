@@ -1,788 +1,1978 @@
 /**
- * Pokémon Card Master Database & Elemental Matrix
- * High-res official artwork from PokeAPI GitHub repository
+ * Official Pokémon TCG Card Database
+ * Authentic cards from Pokémon 151 (sv3pt5) & Celebrations (cel25)
+ * Card scans hosted on pokemontcg.io CDN
  */
 
-const POKEMON_DATA = [
-  // --- GENERATION 1 ---
+const POKEMON_TCG_CARDS = [
   {
-    id: 25,
-    name: "Pikachu",
-    title: "Chuột Điện Quán Quân",
-    type: "electric",
-    rarity: "rare",
-    hp: 420,
-    maxHp: 420,
-    atk: 88,
-    def: 55,
-    spd: 110,
-    moves: [
-      { name: "Tia Điện (Quick Spark)", power: 45, energy: 0, type: "electric" },
-      { name: "Sấm Sét 10 Vạn Volt (Volt Tackle)", power: 125, energy: 2, type: "electric", effect: "crit_chance" }
+    "id": "sv3pt5-1",
+    "name": "Bulbasaur",
+    "hp": 70,
+    "type": "grass",
+    "types": [
+      "Grass"
     ],
-    flavor: "Khi tức giận, điện tích tích tụ trong hai túi má đỏ rực sẽ phóng ra những tia sét khổng lồ."
+    "rarity": "common",
+    "rarityLabel": "Common",
+    "isEx": false,
+    "stage": "Basic",
+    "attacks": [
+      {
+        "name": "Leech Seed",
+        "cost": [
+          "Grass",
+          "Colorless"
+        ],
+        "damage": 20,
+        "damageText": "20",
+        "text": "Heal 20 damage from this Pokémon."
+      }
+    ],
+    "retreatCost": 2,
+    "imageSmall": "https://images.pokemontcg.io/sv3pt5/1.png",
+    "imageLarge": "https://images.pokemontcg.io/sv3pt5/1_hires.png"
   },
   {
-    id: 6,
-    name: "Charizard",
-    title: "Rồng Lửa Bạo Chúa",
-    type: "fire",
-    rarity: "legendary",
-    hp: 680,
-    maxHp: 680,
-    atk: 135,
-    def: 82,
-    spd: 100,
-    moves: [
-      { name: "Cào Lửa (Dragon Claw)", power: 55, energy: 0, type: "fire" },
-      { name: "Bão Lửa Thiêu Rụi (Blast Burn)", power: 165, energy: 3, type: "fire", effect: "burn" }
+    "id": "sv3pt5-2",
+    "name": "Ivysaur",
+    "hp": 100,
+    "type": "grass",
+    "types": [
+      "Grass"
     ],
-    flavor: "Lửa ở đuôi bùng cháy dữ dội khi trải qua các trận chiến khốc liệt. Hơi thở lửa nung chảy cả đá tảng."
+    "rarity": "rare",
+    "rarityLabel": "Uncommon",
+    "isEx": false,
+    "stage": "Stage 1",
+    "attacks": [
+      {
+        "name": "Leech Seed",
+        "cost": [
+          "Grass",
+          "Colorless"
+        ],
+        "damage": 30,
+        "damageText": "30",
+        "text": "Heal 20 damage from this Pokémon."
+      },
+      {
+        "name": "Vine Whip",
+        "cost": [
+          "Grass",
+          "Grass",
+          "Colorless"
+        ],
+        "damage": 80,
+        "damageText": "80",
+        "text": ""
+      }
+    ],
+    "retreatCost": 3,
+    "imageSmall": "https://images.pokemontcg.io/sv3pt5/2.png",
+    "imageLarge": "https://images.pokemontcg.io/sv3pt5/2_hires.png"
   },
   {
-    id: 9,
-    name: "Blastoise",
-    title: "Pháo Thủ Mai Rùa",
-    type: "water",
-    rarity: "epic",
-    hp: 720,
-    maxHp: 720,
-    atk: 95,
-    def: 130,
-    spd: 78,
-    moves: [
-      { name: "Húc Mai Rùa (Aqua Tail)", power: 50, energy: 0, type: "water" },
-      { name: "Đại Bác Áp Lực Nước (Hydro Cannon)", power: 145, energy: 2, type: "water", effect: "shield" }
+    "id": "sv3pt5-3",
+    "name": "Venusaur ex",
+    "hp": 340,
+    "type": "grass",
+    "types": [
+      "Grass"
     ],
-    flavor: "Hai nòng pháo trên mai rùa có thể bắn ra những tia nước áp lực cực mạnh xuyên thủng thép dày."
+    "rarity": "legendary",
+    "rarityLabel": "Double Rare",
+    "isEx": true,
+    "stage": "Stage 2",
+    "attacks": [
+      {
+        "name": "Dangerous Toxwhip",
+        "cost": [
+          "Grass",
+          "Grass",
+          "Colorless"
+        ],
+        "damage": 150,
+        "damageText": "150",
+        "text": "Your opponent's Active Pokémon is now Confused and Poisoned."
+      }
+    ],
+    "retreatCost": 4,
+    "imageSmall": "https://images.pokemontcg.io/sv3pt5/3.png",
+    "imageLarge": "https://images.pokemontcg.io/sv3pt5/3_hires.png"
   },
   {
-    id: 3,
-    name: "Venusaur",
-    title: "Thần Thảo Rừng Xanh",
-    type: "grass",
-    rarity: "epic",
-    hp: 750,
-    maxHp: 750,
-    atk: 100,
-    def: 110,
-    spd: 80,
-    moves: [
-      { name: "Roi Dây Leo (Vine Whip)", power: 52, energy: 0, type: "grass" },
-      { name: "Tia Sáng Thái Dương (Solar Beam)", power: 155, energy: 3, type: "grass", effect: "heal" }
+    "id": "sv3pt5-4",
+    "name": "Charmander",
+    "hp": 70,
+    "type": "fire",
+    "types": [
+      "Fire"
     ],
-    flavor: "Đóa hoa khổng lồ trên lưng tỏa ra hương thơm dịu mát có khả năng hồi phục năng lượng cho đồng đội."
+    "rarity": "common",
+    "rarityLabel": "Common",
+    "isEx": false,
+    "stage": "Basic",
+    "attacks": [
+      {
+        "name": "Blazing Destruction",
+        "cost": [
+          "Fire"
+        ],
+        "damage": 30,
+        "damageText": "30",
+        "text": "Discard a Stadium in play."
+      },
+      {
+        "name": "Steady Firebreathing",
+        "cost": [
+          "Fire",
+          "Fire"
+        ],
+        "damage": 30,
+        "damageText": "30",
+        "text": ""
+      }
+    ],
+    "retreatCost": 1,
+    "imageSmall": "https://images.pokemontcg.io/sv3pt5/4.png",
+    "imageLarge": "https://images.pokemontcg.io/sv3pt5/4_hires.png"
   },
   {
-    id: 94,
-    name: "Gengar",
-    title: "Bóng Ma Hắc Ám",
-    type: "ghost",
-    rarity: "epic",
-    hp: 550,
-    maxHp: 550,
-    atk: 140,
-    def: 65,
-    spd: 115,
-    moves: [
-      { name: "Đấm Bóng Đêm (Shadow Punch)", power: 58, energy: 0, type: "ghost" },
-      { name: "Ác Mộng Hút Hồn (Shadow Ball)", power: 150, energy: 2, type: "ghost", effect: "stun" }
+    "id": "sv3pt5-5",
+    "name": "Charmeleon",
+    "hp": 100,
+    "type": "fire",
+    "types": [
+      "Fire"
     ],
-    flavor: "Ẩn mình trong bóng tối dưới chân nạn nhân. Khi nhiệt độ xung quanh giảm đột ngột, Gengar đang ở gần."
+    "rarity": "rare",
+    "rarityLabel": "Uncommon",
+    "isEx": false,
+    "stage": "Stage 1",
+    "attacks": [
+      {
+        "name": "Combustion",
+        "cost": [
+          "Fire"
+        ],
+        "damage": 20,
+        "damageText": "20",
+        "text": ""
+      },
+      {
+        "name": "Fire Blast",
+        "cost": [
+          "Fire",
+          "Fire",
+          "Fire"
+        ],
+        "damage": 90,
+        "damageText": "90",
+        "text": "Discard an Energy from this Pokémon."
+      }
+    ],
+    "retreatCost": 2,
+    "imageSmall": "https://images.pokemontcg.io/sv3pt5/5.png",
+    "imageLarge": "https://images.pokemontcg.io/sv3pt5/5_hires.png"
   },
   {
-    id: 150,
-    name: "Mewtwo",
-    title: "Chiến Binh Nhân Bản Tối Thượng",
-    type: "psychic",
-    rarity: "mythic",
-    hp: 850,
-    maxHp: 850,
-    atk: 175,
-    def: 95,
-    spd: 130,
-    moves: [
-      { name: "Sóng Siêu Linh (Psycho Cut)", power: 75, energy: 0, type: "psychic" },
-      { name: "Càn Quét Tinh Thần (Psystrike)", power: 210, energy: 3, type: "psychic", effect: "crit_chance" }
+    "id": "sv3pt5-6",
+    "name": "Charizard ex",
+    "hp": 330,
+    "type": "fire",
+    "types": [
+      "Fire"
     ],
-    flavor: "Được tạo ra từ DNA của Mew bởi các nhà khoa học. Sức mạnh tâm linh tối thượng vượt qua mọi sinh vật."
+    "rarity": "legendary",
+    "rarityLabel": "Double Rare",
+    "isEx": true,
+    "stage": "Stage 2",
+    "attacks": [
+      {
+        "name": "Brave Wing",
+        "cost": [
+          "Fire"
+        ],
+        "damage": 60,
+        "damageText": "60+",
+        "text": "If this Pokémon has any damage counters on it, this attack does 100 more damage."
+      },
+      {
+        "name": "Explosive Vortex",
+        "cost": [
+          "Fire",
+          "Fire",
+          "Fire",
+          "Fire"
+        ],
+        "damage": 330,
+        "damageText": "330",
+        "text": "Discard 3 Energy from this Pokémon."
+      }
+    ],
+    "retreatCost": 2,
+    "imageSmall": "https://images.pokemontcg.io/sv3pt5/6.png",
+    "imageLarge": "https://images.pokemontcg.io/sv3pt5/6_hires.png"
   },
   {
-    id: 151,
-    name: "Mew",
-    title: "Cội Nguồn Bí Ẩn",
-    type: "psychic",
-    rarity: "mythic",
-    hp: 700,
-    maxHp: 700,
-    atk: 120,
-    def: 120,
-    spd: 120,
-    moves: [
-      { name: "Tia Tâm Linh (Psyshock)", power: 60, energy: 0, type: "psychic" },
-      { name: "Biến Ảo Vô Tận (Metronome Blast)", power: 170, energy: 2, type: "psychic", effect: "heal" }
+    "id": "sv3pt5-7",
+    "name": "Squirtle",
+    "hp": 60,
+    "type": "water",
+    "types": [
+      "Water"
     ],
-    flavor: "Chứa bộ gen của tất cả Pokémon. Có thể học mọi chiêu thức và tự do tàng hình theo ý muốn."
+    "rarity": "common",
+    "rarityLabel": "Common",
+    "isEx": false,
+    "stage": "Basic",
+    "attacks": [
+      {
+        "name": "Withdraw",
+        "cost": [
+          "Water"
+        ],
+        "damage": 30,
+        "damageText": "30",
+        "text": "Flip a coin. If heads, during your opponent's next turn, prevent all damage done to this Pokémon by attacks."
+      },
+      {
+        "name": "Skull Bash",
+        "cost": [
+          "Water",
+          "Water"
+        ],
+        "damage": 20,
+        "damageText": "20",
+        "text": ""
+      }
+    ],
+    "retreatCost": 1,
+    "imageSmall": "https://images.pokemontcg.io/sv3pt5/7.png",
+    "imageLarge": "https://images.pokemontcg.io/sv3pt5/7_hires.png"
   },
   {
-    id: 149,
-    name: "Dragonite",
-    title: "Long Vương Biển Cả",
-    type: "dragon",
-    rarity: "legendary",
-    hp: 820,
-    maxHp: 820,
-    atk: 145,
-    def: 105,
-    spd: 90,
-    moves: [
-      { name: "Long Nộ (Dragon Tail)", power: 62, energy: 0, type: "dragon" },
-      { name: "Hơi Thở Rồng Thần (Outrage)", power: 180, energy: 3, type: "dragon", effect: "crit_chance" }
+    "id": "sv3pt5-8",
+    "name": "Wartortle",
+    "hp": 100,
+    "type": "water",
+    "types": [
+      "Water"
     ],
-    flavor: "Thân hình to lớn nhưng có thể bay vòng quanh trái đất chỉ trong 16 giờ. Tính tình nhân từ hay cứu người gặp nạn."
+    "rarity": "rare",
+    "rarityLabel": "Uncommon",
+    "isEx": false,
+    "stage": "Stage 1",
+    "attacks": [
+      {
+        "name": "Free Diving",
+        "cost": [
+          "Water"
+        ],
+        "damage": 30,
+        "damageText": "30",
+        "text": "Put up to 3 Basic Water Energy cards from your discard pile into your hand."
+      },
+      {
+        "name": "Spinning Attack",
+        "cost": [
+          "Water",
+          "Water"
+        ],
+        "damage": 50,
+        "damageText": "50",
+        "text": ""
+      }
+    ],
+    "retreatCost": 2,
+    "imageSmall": "https://images.pokemontcg.io/sv3pt5/8.png",
+    "imageLarge": "https://images.pokemontcg.io/sv3pt5/8_hires.png"
   },
   {
-    id: 130,
-    name: "Gyarados",
-    title: "Thủy Quái Cuồng Nộ",
-    type: "water",
-    rarity: "rare",
-    hp: 650,
-    maxHp: 650,
-    atk: 130,
-    def: 85,
-    spd: 85,
-    moves: [
-      { name: "Đập Đuôi Thủy Triều (Aqua Tail)", power: 55, energy: 0, type: "water" },
-      { name: "Cơn Thịnh Nộ Đại Dương (Hydro Pump)", power: 140, energy: 2, type: "water", effect: "burn" }
+    "id": "sv3pt5-9",
+    "name": "Blastoise ex",
+    "hp": 330,
+    "type": "water",
+    "types": [
+      "Water"
     ],
-    flavor: "Tiến hóa từ cá chép Magikarp tầm thường. Khi thức tỉnh cơn cuồng nộ có thể cuốn trôi cả một ngôi làng."
+    "rarity": "legendary",
+    "rarityLabel": "Double Rare",
+    "isEx": true,
+    "stage": "Stage 2",
+    "attacks": [
+      {
+        "name": "Twin Cannons",
+        "cost": [
+          "Water",
+          "Water"
+        ],
+        "damage": 140,
+        "damageText": "140×",
+        "text": "Discard up to 2 Basic Water Energy cards from your hand. This attack does 140 damage for each card you discarded in this way."
+      }
+    ],
+    "retreatCost": 3,
+    "imageSmall": "https://images.pokemontcg.io/sv3pt5/9.png",
+    "imageLarge": "https://images.pokemontcg.io/sv3pt5/9_hires.png"
   },
   {
-    id: 143,
-    name: "Snorlax",
-    title: "Khổng Lồ Ngủ Say",
-    type: "normal",
-    rarity: "rare",
-    hp: 980,
-    maxHp: 980,
-    atk: 110,
-    def: 125,
-    spd: 40,
-    moves: [
-      { name: "Đè Bẹp (Body Slam)", power: 50, energy: 0, type: "normal" },
-      { name: "Đại Lực Đột Kích (Giga Impact)", power: 150, energy: 2, type: "normal", effect: "heal" }
+    "id": "sv3pt5-16",
+    "name": "Pidgey",
+    "hp": 50,
+    "type": "colorless",
+    "types": [
+      "Colorless"
     ],
-    flavor: "Mỗi ngày ăn 400kg thức ăn rồi đi ngủ. Dạ dày tiêu hóa được cả các chất độc nguy hiểm nhất."
+    "rarity": "common",
+    "rarityLabel": "Common",
+    "isEx": false,
+    "stage": "Basic",
+    "attacks": [
+      {
+        "name": "Call for Family",
+        "cost": [
+          "Colorless"
+        ],
+        "damage": 30,
+        "damageText": "30",
+        "text": "Search your deck for up to 2 Basic Pokémon and put them onto your Bench. Then, shuffle your deck."
+      },
+      {
+        "name": "Tackle",
+        "cost": [
+          "Colorless",
+          "Colorless"
+        ],
+        "damage": 20,
+        "damageText": "20",
+        "text": ""
+      }
+    ],
+    "retreatCost": 1,
+    "imageSmall": "https://images.pokemontcg.io/sv3pt5/16.png",
+    "imageLarge": "https://images.pokemontcg.io/sv3pt5/16_hires.png"
   },
   {
-    id: 65,
-    name: "Alakazam",
-    title: "Bậc Thầy Trí Não",
-    type: "psychic",
-    rarity: "rare",
-    hp: 460,
-    maxHp: 460,
-    atk: 145,
-    def: 55,
-    spd: 125,
-    moves: [
-      { name: "Bẻ Cong Muỗng (Psybeam)", power: 50, energy: 0, type: "psychic" },
-      { name: "Ý Chí Vũ Trụ (Psychic)", power: 140, energy: 2, type: "psychic", effect: "stun" }
+    "id": "sv3pt5-25",
+    "name": "Pikachu",
+    "hp": 60,
+    "type": "lightning",
+    "types": [
+      "Lightning"
     ],
-    flavor: "Chỉ số IQ vượt hơn 5.000. Não bộ không ngừng ghi nhớ mọi sự kiện từ khi mới sinh ra."
+    "rarity": "common",
+    "rarityLabel": "Common",
+    "isEx": false,
+    "stage": "Basic",
+    "attacks": [
+      {
+        "name": "Charge",
+        "cost": [
+          "Lightning"
+        ],
+        "damage": 30,
+        "damageText": "30",
+        "text": "Search your deck for a Basic Lightning Energy card and attach it to this Pokémon. Then, shuffle your deck."
+      },
+      {
+        "name": "Pika Punch",
+        "cost": [
+          "Lightning",
+          "Lightning",
+          "Colorless"
+        ],
+        "damage": 50,
+        "damageText": "50",
+        "text": ""
+      }
+    ],
+    "retreatCost": 1,
+    "imageSmall": "https://images.pokemontcg.io/sv3pt5/25.png",
+    "imageLarge": "https://images.pokemontcg.io/sv3pt5/25_hires.png"
   },
   {
-    id: 68,
-    name: "Machamp",
-    title: "Võ Thần Tứ Thủ",
-    type: "fighting",
-    rarity: "rare",
-    hp: 680,
-    maxHp: 680,
-    atk: 135,
-    def: 85,
-    spd: 65,
-    moves: [
-      { name: "Võ Sĩ Quyền Anh (Karate Chop)", power: 55, energy: 0, type: "fighting" },
-      { name: "Liên Hoàn Nghìn Cú Đấm (Dynamic Punch)", power: 155, energy: 2, type: "fighting", effect: "crit_chance" }
+    "id": "sv3pt5-65",
+    "name": "Alakazam ex",
+    "hp": 310,
+    "type": "psychic",
+    "types": [
+      "Psychic"
     ],
-    flavor: "Có 4 cánh tay rắn chắc phóng ra hơn 1.000 cú đấm uy lực chỉ trong vỏn vẹn hai giây."
+    "rarity": "legendary",
+    "rarityLabel": "Double Rare",
+    "isEx": true,
+    "stage": "Stage 2",
+    "attacks": [
+      {
+        "name": "Mind Jack",
+        "cost": [
+          "Colorless",
+          "Colorless"
+        ],
+        "damage": 90,
+        "damageText": "90+",
+        "text": "This attack does 30 more damage for each of your opponent's Benched Pokémon."
+      },
+      {
+        "name": "Dimensional Hand",
+        "cost": [
+          "Psychic",
+          "Psychic"
+        ],
+        "damage": 120,
+        "damageText": "120",
+        "text": "This attack can be used even if this Pokémon is on the Bench."
+      }
+    ],
+    "retreatCost": 1,
+    "imageSmall": "https://images.pokemontcg.io/sv3pt5/65.png",
+    "imageLarge": "https://images.pokemontcg.io/sv3pt5/65_hires.png"
   },
   {
-    id: 144,
-    name: "Articuno",
-    title: "Băng Thần Tuyết Sơn",
-    type: "ice",
-    rarity: "legendary",
-    hp: 730,
-    maxHp: 730,
-    atk: 115,
-    def: 120,
-    spd: 95,
-    moves: [
-      { name: "Mảnh Băng Sắc Lạnh (Ice Shard)", power: 54, energy: 0, type: "ice" },
-      { name: "Bão Tuyết Đóng Băng (Blizzard)", power: 165, energy: 3, type: "ice", effect: "stun" }
+    "id": "sv3pt5-68",
+    "name": "Machamp",
+    "hp": 180,
+    "type": "fighting",
+    "types": [
+      "Fighting"
     ],
-    flavor: "Loài chim thần thoại sống trên những đỉnh núi băng giá. Đôi cánh lướt qua làm tuyết rơi trắng xóa."
+    "rarity": "epic",
+    "rarityLabel": "Rare",
+    "isEx": false,
+    "stage": "Stage 2",
+    "attacks": [
+      {
+        "name": "Mountain Chopping",
+        "cost": [
+          "Fighting",
+          "Fighting"
+        ],
+        "damage": 100,
+        "damageText": "100",
+        "text": "Discard the top 2 cards of your opponent's deck."
+      }
+    ],
+    "retreatCost": 2,
+    "imageSmall": "https://images.pokemontcg.io/sv3pt5/68.png",
+    "imageLarge": "https://images.pokemontcg.io/sv3pt5/68_hires.png"
   },
   {
-    id: 145,
-    name: "Zapdos",
-    title: "Lôi Thần Sấm Sét",
-    type: "electric",
-    rarity: "legendary",
-    hp: 720,
-    maxHp: 720,
-    atk: 135,
-    def: 90,
-    spd: 110,
-    moves: [
-      { name: "Tia Lửa Điện (Thunder Shock)", power: 58, energy: 0, type: "electric" },
-      { name: "Cuồng Lôi Trừng Phạt (Thunder)", power: 175, energy: 3, type: "electric", effect: "crit_chance" }
+    "id": "sv3pt5-94",
+    "name": "Gengar",
+    "hp": 130,
+    "type": "psychic",
+    "types": [
+      "Psychic"
     ],
-    flavor: "Mỗi khi vỗ cánh sẽ tạo ra những tiếng sấm gầm vang trời và tia chớp giáng xuống đất."
+    "rarity": "epic",
+    "rarityLabel": "Rare",
+    "isEx": false,
+    "stage": "Stage 2",
+    "attacks": [
+      {
+        "name": "Poltergeist",
+        "cost": [
+          "Psychic"
+        ],
+        "damage": 50,
+        "damageText": "50×",
+        "text": "Your opponent reveals their hand. This attack does 50 damage for each Trainer card you find there."
+      },
+      {
+        "name": "Hollow Dive",
+        "cost": [
+          "Psychic",
+          "Colorless"
+        ],
+        "damage": 110,
+        "damageText": "110",
+        "text": "Put 3 damage counters on your opponent's Benched Pokémon in any way you like."
+      }
+    ],
+    "retreatCost": 1,
+    "imageSmall": "https://images.pokemontcg.io/sv3pt5/94.png",
+    "imageLarge": "https://images.pokemontcg.io/sv3pt5/94_hires.png"
   },
   {
-    id: 146,
-    name: "Moltres",
-    title: "Hỏa Điểu Tái Sinh",
-    type: "fire",
-    rarity: "legendary",
-    hp: 720,
-    maxHp: 720,
-    atk: 135,
-    def: 95,
-    spd: 100,
-    moves: [
-      { name: "Mũi Tên Lửa (Fire Spin)", power: 56, energy: 0, type: "fire" },
-      { name: "Phượng Hoàng Lửa (Overheat)", power: 170, energy: 3, type: "fire", effect: "burn" }
+    "id": "sv3pt5-143",
+    "name": "Snorlax",
+    "hp": 150,
+    "type": "colorless",
+    "types": [
+      "Colorless"
     ],
-    flavor: "Loài chim phượng hoàng rực lửa. Tương truyền khi tắm trong nham thạch núi lửa sẽ chữa lành mọi vết thương."
+    "rarity": "rare",
+    "rarityLabel": "Uncommon",
+    "isEx": false,
+    "stage": "Basic",
+    "attacks": [
+      {
+        "name": "Thudding Press",
+        "cost": [
+          "Colorless",
+          "Colorless",
+          "Colorless"
+        ],
+        "damage": 130,
+        "damageText": "130",
+        "text": "This Pokémon also does 30 damage to itself."
+      }
+    ],
+    "retreatCost": 4,
+    "imageSmall": "https://images.pokemontcg.io/sv3pt5/143.png",
+    "imageLarge": "https://images.pokemontcg.io/sv3pt5/143_hires.png"
   },
   {
-    id: 133,
-    name: "Eevee",
-    title: "Tiềm Năng Đa Hệ",
-    type: "normal",
-    rarity: "common",
-    hp: 360,
-    maxHp: 360,
-    atk: 60,
-    def: 55,
-    spd: 65,
-    moves: [
-      { name: "Húc Đầu Nhanh (Quick Attack)", power: 38, energy: 0, type: "normal" },
-      { name: "Ngôi Sao Hy Vọng (Swift)", power: 85, energy: 1, type: "normal", effect: "none" }
+    "id": "sv3pt5-144",
+    "name": "Articuno",
+    "hp": 120,
+    "type": "water",
+    "types": [
+      "Water"
     ],
-    flavor: "Mã gen di truyền không ổn định giúp Eevee có thể tiến hóa thành 8 hình thái hệ nguyên tố khác nhau."
-  },
-
-  // --- GENERATION 2 ---
-  {
-    id: 249,
-    name: "Lugia",
-    title: "Hộ Vệ Vực Biển Sâu",
-    type: "psychic",
-    rarity: "legendary",
-    hp: 880,
-    maxHp: 880,
-    atk: 120,
-    def: 140,
-    spd: 110,
-    moves: [
-      { name: "Lốc Biển (Gust)", power: 55, energy: 0, type: "psychic" },
-      { name: "Vụ Nổ Không Gian Biển (Aeroblast)", power: 195, energy: 3, type: "psychic", effect: "shield" }
+    "rarity": "epic",
+    "rarityLabel": "Rare",
+    "isEx": false,
+    "stage": "Basic",
+    "attacks": [
+      {
+        "name": "Blizzard",
+        "cost": [
+          "Water",
+          "Water",
+          "Water"
+        ],
+        "damage": 110,
+        "damageText": "110",
+        "text": "This attack also does 10 damage to each of your opponent's Benched Pokémon. (Don't apply Weakness and Resistance for Benched Pokémon.)"
+      }
     ],
-    flavor: "Người bảo vệ đại dương, ngủ say dưới đáy biển sâu. Chỉ cần vỗ cánh nhẹ cũng tạo nên cơn bão 40 ngày."
+    "retreatCost": 2,
+    "imageSmall": "https://images.pokemontcg.io/sv3pt5/144.png",
+    "imageLarge": "https://images.pokemontcg.io/sv3pt5/144_hires.png"
   },
   {
-    id: 250,
-    name: "Ho-Oh",
-    title: "Hỏa Phượng Bảy Sắc Cầu Vồng",
-    type: "fire",
-    rarity: "legendary",
-    hp: 870,
-    maxHp: 870,
-    atk: 135,
-    def: 130,
-    spd: 100,
-    moves: [
-      { name: "Tia Lửa Rực Rỡ (Flamethrower)", power: 60, energy: 0, type: "fire" },
-      { name: "Thánh Hỏa Tái Sinh (Sacred Fire)", power: 190, energy: 3, type: "fire", effect: "heal" }
+    "id": "sv3pt5-145",
+    "name": "Zapdos ex",
+    "hp": 200,
+    "type": "lightning",
+    "types": [
+      "Lightning"
     ],
-    flavor: "Bay lượn trên bầu trời để lại vệt sáng cầu vồng rực rỡ. Ban phước lành hạnh phúc vĩnh cửu cho ai nhìn thấy."
+    "rarity": "legendary",
+    "rarityLabel": "Double Rare",
+    "isEx": true,
+    "stage": "Basic",
+    "attacks": [
+      {
+        "name": "Multishot Lightning",
+        "cost": [
+          "Lightning",
+          "Lightning",
+          "Lightning"
+        ],
+        "damage": 120,
+        "damageText": "120",
+        "text": "This attack also does 90 damage to 1 of your opponent's Benched Pokémon that has any damage counters on it. (Don't apply Weakness and Resistance for Benched Pokémon.)"
+      }
+    ],
+    "retreatCost": 2,
+    "imageSmall": "https://images.pokemontcg.io/sv3pt5/145.png",
+    "imageLarge": "https://images.pokemontcg.io/sv3pt5/145_hires.png"
   },
   {
-    id: 248,
-    name: "Tyranitar",
-    title: "Hắc Bạo Chúa Sa Mạc",
-    type: "rock",
-    rarity: "epic",
-    hp: 780,
-    maxHp: 780,
-    atk: 145,
-    def: 115,
-    spd: 65,
-    moves: [
-      { name: "Cắn Xé Đêm Tối (Crunch)", power: 60, energy: 0, type: "dark" },
-      { name: "Bão Cát Địa Chấn (Stone Edge)", power: 160, energy: 2, type: "rock", effect: "shield" }
+    "id": "sv3pt5-146",
+    "name": "Moltres",
+    "hp": 120,
+    "type": "fire",
+    "types": [
+      "Fire"
     ],
-    flavor: "Lớp vỏ đá cứng như giáp bọc thép. Cơn giận của nó có thể làm sụp đổ cả ngọn núi hùng vĩ."
+    "rarity": "epic",
+    "rarityLabel": "Rare",
+    "isEx": false,
+    "stage": "Basic",
+    "attacks": [
+      {
+        "name": "Blazing Flight",
+        "cost": [
+          "Fire",
+          "Fire",
+          "Fire"
+        ],
+        "damage": 30,
+        "damageText": "30",
+        "text": "Discard 2 Fire Energy from this Pokémon. This attack does 120 damage to 1 of your opponent's Benched Pokémon. (Don't apply Weakness and Resistance for Benched Pokémon.)"
+      }
+    ],
+    "retreatCost": 2,
+    "imageSmall": "https://images.pokemontcg.io/sv3pt5/146.png",
+    "imageLarge": "https://images.pokemontcg.io/sv3pt5/146_hires.png"
   },
   {
-    id: 212,
-    name: "Scizor",
-    title: "Hiệp Sĩ Thiết Giáp",
-    type: "steel",
-    rarity: "rare",
-    hp: 580,
-    maxHp: 580,
-    atk: 140,
-    def: 110,
-    spd: 75,
-    moves: [
-      { name: "Song Đao Sắt (Bullet Punch)", power: 55, energy: 0, type: "steel" },
-      { name: "Càng Kẹp Sát Thủ (X-Scissor)", power: 145, energy: 2, type: "bug", effect: "crit_chance" }
+    "id": "sv3pt5-149",
+    "name": "Dragonite",
+    "hp": 180,
+    "type": "dragon",
+    "types": [
+      "Dragon"
     ],
-    flavor: "Hai chiếc càng chứa thép siêu cứng nghiền nát mọi chướng ngại vật thành bột mịn."
-  },
-
-  // --- GENERATION 3 ---
-  {
-    id: 384,
-    name: "Rayquaza",
-    title: "Hoàng Đế Tầng Bình Lưu",
-    type: "dragon",
-    rarity: "mythic",
-    hp: 880,
-    maxHp: 880,
-    atk: 180,
-    def: 95,
-    spd: 120,
-    moves: [
-      { name: "Đao Gió Long Thần (Air Slash)", power: 65, energy: 0, type: "flying" },
-      { name: "Thăng Long Thần Khí (Dragon Ascent)", power: 220, energy: 3, type: "dragon", effect: "crit_chance" }
+    "rarity": "epic",
+    "rarityLabel": "Rare",
+    "isEx": false,
+    "stage": "Stage 2",
+    "attacks": [
+      {
+        "name": "Dragon Pulse",
+        "cost": [
+          "Water",
+          "Lightning"
+        ],
+        "damage": 180,
+        "damageText": "180",
+        "text": "Discard the top 2 cards of your deck."
+      }
     ],
-    flavor: "Sinh sống hàng triệu năm trên tầng ozone hấp thụ các mảnh thiên thạch. Kẻ định đoạt hòa bình nhân loại."
+    "retreatCost": 3,
+    "imageSmall": "https://images.pokemontcg.io/sv3pt5/149.png",
+    "imageLarge": "https://images.pokemontcg.io/sv3pt5/149_hires.png"
   },
   {
-    id: 382,
-    name: "Kyogre",
-    title: "Chúa Tể Thủy Triều",
-    type: "water",
-    rarity: "legendary",
-    hp: 850,
-    maxHp: 850,
-    atk: 145,
-    def: 125,
-    spd: 95,
-    moves: [
-      { name: "Sóng Thần (Water Pulse)", power: 60, energy: 0, type: "water" },
-      { name: "Cội Nguồn Sóng Biển (Origin Pulse)", power: 195, energy: 3, type: "water", effect: "burn" }
+    "id": "sv3pt5-150",
+    "name": "Mewtwo",
+    "hp": 130,
+    "type": "psychic",
+    "types": [
+      "Psychic"
     ],
-    flavor: "Thần thoại ngự trị biển cả, người đã mở rộng đại dương bằng những cơn mưa tầm tã bất tận."
+    "rarity": "epic",
+    "rarityLabel": "Rare",
+    "isEx": false,
+    "stage": "Basic",
+    "attacks": [
+      {
+        "name": "Reflective Barrier",
+        "cost": [
+          "Colorless",
+          "Colorless"
+        ],
+        "damage": 20,
+        "damageText": "20",
+        "text": "During your opponent's next turn, if this Pokémon is damaged by an attack (even if it is Knocked Out), put damage counters on the Attacking Pokémon equal to the damage done to this Pokémon."
+      },
+      {
+        "name": "Psyslash",
+        "cost": [
+          "Psychic",
+          "Psychic",
+          "Colorless"
+        ],
+        "damage": 130,
+        "damageText": "130",
+        "text": "Discard 2 Energy from this Pokémon."
+      }
+    ],
+    "retreatCost": 2,
+    "imageSmall": "https://images.pokemontcg.io/sv3pt5/150.png",
+    "imageLarge": "https://images.pokemontcg.io/sv3pt5/150_hires.png"
   },
   {
-    id: 383,
-    name: "Groudon",
-    title: "Chúa Tể Đại Lục",
-    type: "ground",
-    rarity: "legendary",
-    hp: 860,
-    maxHp: 860,
-    atk: 155,
-    def: 135,
-    spd: 90,
-    moves: [
-      { name: "Nứt Đất (Mud Shot)", power: 60, energy: 0, type: "ground" },
-      { name: "Thanh Kiếm Nhai Bột (Precipice Blades)", power: 200, energy: 3, type: "ground", effect: "shield" }
+    "id": "sv3pt5-151",
+    "name": "Mew ex",
+    "hp": 180,
+    "type": "psychic",
+    "types": [
+      "Psychic"
     ],
-    flavor: "Đại diện cho đất mẹ màu mỡ, từng thổi bùng ánh nắng làm bốc hơi biển để kiến tạo nên các lục địa."
+    "rarity": "legendary",
+    "rarityLabel": "Double Rare",
+    "isEx": true,
+    "stage": "Basic",
+    "attacks": [
+      {
+        "name": "Genome Hacking",
+        "cost": [
+          "Colorless",
+          "Colorless",
+          "Colorless"
+        ],
+        "damage": 30,
+        "damageText": "30",
+        "text": "Choose 1 of your opponent's Active Pokémon's attacks and use it as this attack."
+      }
+    ],
+    "retreatCost": 1,
+    "imageSmall": "https://images.pokemontcg.io/sv3pt5/151.png",
+    "imageLarge": "https://images.pokemontcg.io/sv3pt5/151_hires.png"
   },
   {
-    id: 257,
-    name: "Blaziken",
-    title: "Vua Túc Cầu Hỏa Liệt",
-    type: "fire",
-    rarity: "epic",
-    hp: 630,
-    maxHp: 630,
-    atk: 135,
-    def: 75,
-    spd: 95,
-    moves: [
-      { name: "Cú Đá Hỏa Tiễn (Flame Charge)", power: 55, energy: 0, type: "fire" },
-      { name: "Cuồng Nộ Túc Cầu (Brave Bird)", power: 155, energy: 2, type: "flying", effect: "crit_chance" }
+    "id": "sv3pt5-166",
+    "name": "Bulbasaur",
+    "hp": 70,
+    "type": "grass",
+    "types": [
+      "Grass"
     ],
-    flavor: "Bật nhảy qua cả tòa nhà cao ốc 30 tầng và tung ra những cú đá rực lửa xé rách màn đêm."
+    "rarity": "mythic",
+    "rarityLabel": "Illustration Rare",
+    "isEx": false,
+    "stage": "Basic",
+    "attacks": [
+      {
+        "name": "Leech Seed",
+        "cost": [
+          "Grass",
+          "Colorless"
+        ],
+        "damage": 20,
+        "damageText": "20",
+        "text": "Heal 20 damage from this Pokémon."
+      }
+    ],
+    "retreatCost": 2,
+    "imageSmall": "https://images.pokemontcg.io/sv3pt5/166.png",
+    "imageLarge": "https://images.pokemontcg.io/sv3pt5/166_hires.png"
   },
   {
-    id: 282,
-    name: "Gardevoir",
-    title: "Vũ Nữ Tâm Linh Tận Tụy",
-    type: "psychic",
-    rarity: "epic",
-    hp: 600,
-    maxHp: 600,
-    atk: 130,
-    def: 85,
-    spd: 90,
-    moves: [
-      { name: "Ánh Sao Nguyện Cầu (Moonblast)", power: 58, energy: 0, type: "fairy" },
-      { name: "Hố Đen Tâm Linh (Psychic Singularity)", power: 160, energy: 2, type: "psychic", effect: "shield" }
+    "id": "sv3pt5-167",
+    "name": "Ivysaur",
+    "hp": 100,
+    "type": "grass",
+    "types": [
+      "Grass"
     ],
-    flavor: "Có khả năng nhìn thấu tương lai và sẵn sàng tạo ra một hố đen vũ trụ để bảo vệ Huấn luyện viên."
-  },
-
-  // --- GENERATION 4 & BEYOND ---
-  {
-    id: 448,
-    name: "Lucario",
-    title: "Chiến Thần Tinh Thần Lực (Aura)",
-    type: "fighting",
-    rarity: "legendary",
-    hp: 620,
-    maxHp: 620,
-    atk: 145,
-    def: 75,
-    spd: 105,
-    moves: [
-      { name: "Quyền Phong Tinh Thần (Force Palm)", power: 60, energy: 0, type: "fighting" },
-      { name: "Cầu Năng Lượng Aura (Aura Sphere)", power: 180, energy: 3, type: "fighting", effect: "crit_chance" }
+    "rarity": "mythic",
+    "rarityLabel": "Illustration Rare",
+    "isEx": false,
+    "stage": "Stage 1",
+    "attacks": [
+      {
+        "name": "Leech Seed",
+        "cost": [
+          "Grass",
+          "Colorless"
+        ],
+        "damage": 30,
+        "damageText": "30",
+        "text": "Heal 20 damage from this Pokémon."
+      },
+      {
+        "name": "Vine Whip",
+        "cost": [
+          "Grass",
+          "Grass",
+          "Colorless"
+        ],
+        "damage": 80,
+        "damageText": "80",
+        "text": ""
+      }
     ],
-    flavor: "Đọc thấu suy nghĩ và cảm xúc của đối thủ qua sóng Aura. Cầu năng lượng Aura không bao giờ trượt mục tiêu."
-  },
-  {
-    id: 445,
-    name: "Garchomp",
-    title: "Thần Cá Mập Đất Long Vương",
-    type: "dragon",
-    rarity: "epic",
-    hp: 790,
-    maxHp: 790,
-    atk: 140,
-    def: 95,
-    spd: 110,
-    moves: [
-      { name: "Móng Vuốt Long Thần (Dragon Claw)", power: 60, energy: 0, type: "dragon" },
-      { name: "Động Đất San Bằng (Earthquake)", power: 165, energy: 2, type: "ground", effect: "crit_chance" }
-    ],
-    flavor: "Lướt trên không trung với tốc độ âm thanh sánh ngang máy bay tiêm kích phản lực."
+    "retreatCost": 3,
+    "imageSmall": "https://images.pokemontcg.io/sv3pt5/167.png",
+    "imageLarge": "https://images.pokemontcg.io/sv3pt5/167_hires.png"
   },
   {
-    id: 483,
-    name: "Dialga",
-    title: "Chúa Tể Thời Gian",
-    type: "steel",
-    rarity: "mythic",
-    hp: 890,
-    maxHp: 890,
-    atk: 160,
-    def: 130,
-    spd: 90,
-    moves: [
-      { name: "Mũi Giáo Kim Loại (Metal Claw)", power: 65, energy: 0, type: "steel" },
-      { name: "Tiếng Gầm Thời Gian (Roar of Time)", power: 220, energy: 3, type: "dragon", effect: "stun" }
+    "id": "sv3pt5-168",
+    "name": "Charmander",
+    "hp": 70,
+    "type": "fire",
+    "types": [
+      "Fire"
     ],
-    flavor: "Thời gian bắt đầu chuyển động khi Dialga được sinh ra. Có quyền năng kiểm soát dòng chảy quá khứ và tương lai."
+    "rarity": "mythic",
+    "rarityLabel": "Illustration Rare",
+    "isEx": false,
+    "stage": "Basic",
+    "attacks": [
+      {
+        "name": "Blazing Destruction",
+        "cost": [
+          "Fire"
+        ],
+        "damage": 30,
+        "damageText": "30",
+        "text": "Discard a Stadium in play."
+      },
+      {
+        "name": "Steady Firebreathing",
+        "cost": [
+          "Fire",
+          "Fire"
+        ],
+        "damage": 30,
+        "damageText": "30",
+        "text": ""
+      }
+    ],
+    "retreatCost": 1,
+    "imageSmall": "https://images.pokemontcg.io/sv3pt5/168.png",
+    "imageLarge": "https://images.pokemontcg.io/sv3pt5/168_hires.png"
   },
   {
-    id: 484,
-    name: "Palkia",
-    title: "Chúa Tể Không Gian",
-    type: "water",
-    rarity: "mythic",
-    hp: 880,
-    maxHp: 880,
-    atk: 160,
-    def: 125,
-    spd: 105,
-    moves: [
-      { name: "Thủy Cầu Áp Suất (Water Pulse)", power: 65, energy: 0, type: "water" },
-      { name: "Xé Rách Không Gian (Spacial Rend)", power: 220, energy: 3, type: "dragon", effect: "crit_chance" }
+    "id": "sv3pt5-169",
+    "name": "Charmeleon",
+    "hp": 100,
+    "type": "fire",
+    "types": [
+      "Fire"
     ],
-    flavor: "Ngự trị tại khe nứt không gian song song. Mỗi hơi thở của nó ổn định trật tự cấu trúc vũ trụ."
+    "rarity": "mythic",
+    "rarityLabel": "Illustration Rare",
+    "isEx": false,
+    "stage": "Stage 1",
+    "attacks": [
+      {
+        "name": "Combustion",
+        "cost": [
+          "Fire"
+        ],
+        "damage": 20,
+        "damageText": "20",
+        "text": ""
+      },
+      {
+        "name": "Fire Blast",
+        "cost": [
+          "Fire",
+          "Fire",
+          "Fire"
+        ],
+        "damage": 90,
+        "damageText": "90",
+        "text": "Discard an Energy from this Pokémon."
+      }
+    ],
+    "retreatCost": 2,
+    "imageSmall": "https://images.pokemontcg.io/sv3pt5/169.png",
+    "imageLarge": "https://images.pokemontcg.io/sv3pt5/169_hires.png"
   },
   {
-    id: 487,
-    name: "Giratina",
-    title: "Bá Chủ Thế Giới Đảo Ngược",
-    type: "ghost",
-    rarity: "mythic",
-    hp: 950,
-    maxHp: 950,
-    atk: 155,
-    def: 140,
-    spd: 90,
-    moves: [
-      { name: "Bóng Ma U Ám (Shadow Sneak)", power: 60, energy: 0, type: "ghost" },
-      { name: "Tuyệt Kỹ Đảo Chiều (Shadow Force)", power: 215, energy: 3, type: "ghost", effect: "shield" }
+    "id": "sv3pt5-170",
+    "name": "Squirtle",
+    "hp": 60,
+    "type": "water",
+    "types": [
+      "Water"
     ],
-    flavor: "Bị trục xuất vì tính bạo lực sang Thế giới Đảo ngược, nơi quy luật vật lý và trọng lực không tồn tại."
+    "rarity": "mythic",
+    "rarityLabel": "Illustration Rare",
+    "isEx": false,
+    "stage": "Basic",
+    "attacks": [
+      {
+        "name": "Withdraw",
+        "cost": [
+          "Water"
+        ],
+        "damage": 30,
+        "damageText": "30",
+        "text": "Flip a coin. If heads, during your opponent's next turn, prevent all damage done to this Pokémon by attacks."
+      },
+      {
+        "name": "Skull Bash",
+        "cost": [
+          "Water",
+          "Water"
+        ],
+        "damage": 20,
+        "damageText": "20",
+        "text": ""
+      }
+    ],
+    "retreatCost": 1,
+    "imageSmall": "https://images.pokemontcg.io/sv3pt5/170.png",
+    "imageLarge": "https://images.pokemontcg.io/sv3pt5/170_hires.png"
   },
   {
-    id: 493,
-    name: "Arceus",
-    title: "Đấng Sáng Tạo Vạn Vật",
-    type: "normal",
-    rarity: "mythic",
-    hp: 1000,
-    maxHp: 1000,
-    atk: 180,
-    def: 160,
-    spd: 130,
-    moves: [
-      { name: "Ánh Sáng Thánh Khởi (Judgment Spike)", power: 75, energy: 0, type: "normal" },
-      { name: "Phán Quyết Khai Thiên (Judgment)", power: 250, energy: 3, type: "normal", effect: "crit_chance" }
+    "id": "sv3pt5-171",
+    "name": "Wartortle",
+    "hp": 100,
+    "type": "water",
+    "types": [
+      "Water"
     ],
-    flavor: "Đản sinh từ hư vô trước khi vũ trụ hình thành. Đã dùng một nghìn cánh tay để tạo dựng nên thế giới."
+    "rarity": "mythic",
+    "rarityLabel": "Illustration Rare",
+    "isEx": false,
+    "stage": "Stage 1",
+    "attacks": [
+      {
+        "name": "Free Diving",
+        "cost": [
+          "Water"
+        ],
+        "damage": 30,
+        "damageText": "30",
+        "text": "Put up to 3 Basic Water Energy cards from your discard pile into your hand."
+      },
+      {
+        "name": "Spinning Attack",
+        "cost": [
+          "Water",
+          "Water"
+        ],
+        "damage": 50,
+        "damageText": "50",
+        "text": ""
+      }
+    ],
+    "retreatCost": 2,
+    "imageSmall": "https://images.pokemontcg.io/sv3pt5/171.png",
+    "imageLarge": "https://images.pokemontcg.io/sv3pt5/171_hires.png"
   },
   {
-    id: 658,
-    name: "Greninja",
-    title: "Nhẫn Giả Thủy Long",
-    type: "water",
-    rarity: "legendary",
-    hp: 630,
-    maxHp: 630,
-    atk: 140,
-    def: 70,
-    spd: 135,
-    moves: [
-      { name: "Ám Khí Băng Giá (Water Pulse)", power: 60, energy: 0, type: "water" },
-      { name: "Phi Tiêu Nước Xoáy (Water Shuriken)", power: 175, energy: 3, type: "water", effect: "crit_chance" }
+    "id": "sv3pt5-173",
+    "name": "Pikachu",
+    "hp": 60,
+    "type": "lightning",
+    "types": [
+      "Lightning"
     ],
-    flavor: "Di chuyển thoắt ẩn thoắt hiện như một ninja thực thụ. Nén nước thành những phi tiêu sắc bén chém đứt kim loại."
-  },
-
-  // --- COMMON POKEMON POOL ---
-  {
-    id: 1,
-    name: "Bulbasaur",
-    title: "Hạt Mầm Xanh",
-    type: "grass",
-    rarity: "common",
-    hp: 380,
-    maxHp: 380,
-    atk: 55,
-    def: 55,
-    spd: 50,
-    moves: [
-      { name: "Tacke", power: 35, energy: 0, type: "normal" },
-      { name: "Dây Leo (Vine Whip)", power: 75, energy: 1, type: "grass", effect: "none" }
+    "rarity": "mythic",
+    "rarityLabel": "Illustration Rare",
+    "isEx": false,
+    "stage": "Basic",
+    "attacks": [
+      {
+        "name": "Charge",
+        "cost": [
+          "Lightning"
+        ],
+        "damage": 30,
+        "damageText": "30",
+        "text": "Search your deck for a Basic Lightning Energy card and attach it to this Pokémon. Then, shuffle your deck."
+      },
+      {
+        "name": "Pika Punch",
+        "cost": [
+          "Lightning",
+          "Lightning",
+          "Colorless"
+        ],
+        "damage": 50,
+        "damageText": "50",
+        "text": ""
+      }
     ],
-    flavor: "Hạt mầm trên lưng lớn dần theo thời gian khi hấp thụ ánh sáng mặt trời."
-  },
-  {
-    id: 4,
-    name: "Charmander",
-    title: "Rồng Lửa Nhỏ",
-    type: "fire",
-    rarity: "common",
-    hp: 360,
-    maxHp: 360,
-    atk: 60,
-    def: 45,
-    spd: 65,
-    moves: [
-      { name: "Cào (Scratch)", power: 36, energy: 0, type: "normal" },
-      { name: "Tia Lửa (Ember)", power: 80, energy: 1, type: "fire", effect: "none" }
-    ],
-    flavor: "Ngọn lửa ở chóp đuôi thể hiện sức sống của Charmander. Lửa tắt là lúc sinh mệnh kết thúc."
+    "retreatCost": 1,
+    "imageSmall": "https://images.pokemontcg.io/sv3pt5/173.png",
+    "imageLarge": "https://images.pokemontcg.io/sv3pt5/173_hires.png"
   },
   {
-    id: 7,
-    name: "Squirtle",
-    title: "Rùa Nước Tinh Nghịch",
-    type: "water",
-    rarity: "common",
-    hp: 400,
-    maxHp: 400,
-    atk: 50,
-    def: 70,
-    spd: 45,
-    moves: [
-      { name: "Húc Mai (Tackle)", power: 35, energy: 0, type: "normal" },
-      { name: "Bắn Nước (Water Gun)", power: 75, energy: 1, type: "water", effect: "none" }
+    "id": "sv3pt5-182",
+    "name": "Venusaur ex",
+    "hp": 340,
+    "type": "grass",
+    "types": [
+      "Grass"
     ],
-    flavor: "Khi bị tấn công, Squirtle rụt đầu và tứ chi vào mai rồi phun nước bọt áp lực cao phản kích."
+    "rarity": "legendary",
+    "rarityLabel": "Ultra Rare",
+    "isEx": true,
+    "stage": "Stage 2",
+    "attacks": [
+      {
+        "name": "Dangerous Toxwhip",
+        "cost": [
+          "Grass",
+          "Grass",
+          "Colorless"
+        ],
+        "damage": 150,
+        "damageText": "150",
+        "text": "Your opponent's Active Pokémon is now Confused and Poisoned."
+      }
+    ],
+    "retreatCost": 4,
+    "imageSmall": "https://images.pokemontcg.io/sv3pt5/182.png",
+    "imageLarge": "https://images.pokemontcg.io/sv3pt5/182_hires.png"
   },
   {
-    id: 16,
-    name: "Pidgey",
-    title: "Chim Nhỏ Đồng Cỏ",
-    type: "flying",
-    rarity: "common",
-    hp: 340,
-    maxHp: 340,
-    atk: 48,
-    def: 42,
-    spd: 60,
-    moves: [
-      { name: "Mổ (Peck)", power: 34, energy: 0, type: "flying" },
-      { name: "Gió Cuốn (Gust)", power: 70, energy: 1, type: "flying", effect: "none" }
+    "id": "sv3pt5-183",
+    "name": "Charizard ex",
+    "hp": 330,
+    "type": "fire",
+    "types": [
+      "Fire"
     ],
-    flavor: "Có khứu giác phương hướng cực kỳ nhạy bén, luôn tìm được đường về tổ dù ở khoảng cách xa xôi."
+    "rarity": "legendary",
+    "rarityLabel": "Ultra Rare",
+    "isEx": true,
+    "stage": "Stage 2",
+    "attacks": [
+      {
+        "name": "Brave Wing",
+        "cost": [
+          "Fire"
+        ],
+        "damage": 60,
+        "damageText": "60+",
+        "text": "If this Pokémon has any damage counters on it, this attack does 100 more damage."
+      },
+      {
+        "name": "Explosive Vortex",
+        "cost": [
+          "Fire",
+          "Fire",
+          "Fire",
+          "Fire"
+        ],
+        "damage": 330,
+        "damageText": "330",
+        "text": "Discard 3 Energy from this Pokémon."
+      }
+    ],
+    "retreatCost": 2,
+    "imageSmall": "https://images.pokemontcg.io/sv3pt5/183.png",
+    "imageLarge": "https://images.pokemontcg.io/sv3pt5/183_hires.png"
   },
   {
-    id: 74,
-    name: "Geodude",
-    title: "Hòn Đá Lăn",
-    type: "rock",
-    rarity: "common",
-    hp: 420,
-    maxHp: 420,
-    atk: 65,
-    def: 85,
-    spd: 30,
-    moves: [
-      { name: "Húc Đá (Tackle)", power: 36, energy: 0, type: "normal" },
-      { name: "Ném Đá Tảng (Rock Throw)", power: 78, energy: 1, type: "rock", effect: "none" }
+    "id": "sv3pt5-184",
+    "name": "Blastoise ex",
+    "hp": 330,
+    "type": "water",
+    "types": [
+      "Water"
     ],
-    flavor: "Tự hào với cơ thể rắn như đá hoa cương, thường dùng hai tay leo trèo trên những vách núi hiểm trở."
+    "rarity": "legendary",
+    "rarityLabel": "Ultra Rare",
+    "isEx": true,
+    "stage": "Stage 2",
+    "attacks": [
+      {
+        "name": "Twin Cannons",
+        "cost": [
+          "Water",
+          "Water"
+        ],
+        "damage": 140,
+        "damageText": "140×",
+        "text": "Discard up to 2 Basic Water Energy cards from your hand. This attack does 140 damage for each card you discarded in this way."
+      }
+    ],
+    "retreatCost": 3,
+    "imageSmall": "https://images.pokemontcg.io/sv3pt5/184.png",
+    "imageLarge": "https://images.pokemontcg.io/sv3pt5/184_hires.png"
   },
   {
-    id: 92,
-    name: "Gastly",
-    title: "Làn Khói Khí Độc",
-    type: "ghost",
-    rarity: "common",
-    hp: 320,
-    maxHp: 320,
-    atk: 68,
-    def: 35,
-    spd: 80,
-    moves: [
-      { name: "Liếm Lưỡi (Lick)", power: 35, energy: 0, type: "ghost" },
-      { name: "Khí Độc Tử Thần (Smog)", power: 76, energy: 1, type: "poison", effect: "none" }
+    "id": "sv3pt5-188",
+    "name": "Alakazam ex",
+    "hp": 310,
+    "type": "psychic",
+    "types": [
+      "Psychic"
     ],
-    flavor: "Cơ thể cấu tạo từ 95% chất khí độc hại. Có thể luồn lách qua bất kỳ khe hở kín nào."
+    "rarity": "legendary",
+    "rarityLabel": "Ultra Rare",
+    "isEx": true,
+    "stage": "Stage 2",
+    "attacks": [
+      {
+        "name": "Mind Jack",
+        "cost": [
+          "Colorless",
+          "Colorless"
+        ],
+        "damage": 90,
+        "damageText": "90+",
+        "text": "This attack does 30 more damage for each of your opponent's Benched Pokémon."
+      },
+      {
+        "name": "Dimensional Hand",
+        "cost": [
+          "Psychic",
+          "Psychic"
+        ],
+        "damage": 120,
+        "damageText": "120",
+        "text": "This attack can be used even if this Pokémon is on the Bench."
+      }
+    ],
+    "retreatCost": 1,
+    "imageSmall": "https://images.pokemontcg.io/sv3pt5/188.png",
+    "imageLarge": "https://images.pokemontcg.io/sv3pt5/188_hires.png"
+  },
+  {
+    "id": "sv3pt5-192",
+    "name": "Zapdos ex",
+    "hp": 200,
+    "type": "lightning",
+    "types": [
+      "Lightning"
+    ],
+    "rarity": "legendary",
+    "rarityLabel": "Ultra Rare",
+    "isEx": true,
+    "stage": "Basic",
+    "attacks": [
+      {
+        "name": "Multishot Lightning",
+        "cost": [
+          "Lightning",
+          "Lightning",
+          "Lightning"
+        ],
+        "damage": 120,
+        "damageText": "120",
+        "text": "This attack also does 90 damage to 1 of your opponent's Benched Pokémon that has any damage counters on it. (Don't apply Weakness and Resistance for Benched Pokémon.)"
+      }
+    ],
+    "retreatCost": 2,
+    "imageSmall": "https://images.pokemontcg.io/sv3pt5/192.png",
+    "imageLarge": "https://images.pokemontcg.io/sv3pt5/192_hires.png"
+  },
+  {
+    "id": "sv3pt5-193",
+    "name": "Mew ex",
+    "hp": 180,
+    "type": "psychic",
+    "types": [
+      "Psychic"
+    ],
+    "rarity": "legendary",
+    "rarityLabel": "Ultra Rare",
+    "isEx": true,
+    "stage": "Basic",
+    "attacks": [
+      {
+        "name": "Genome Hacking",
+        "cost": [
+          "Colorless",
+          "Colorless",
+          "Colorless"
+        ],
+        "damage": 30,
+        "damageText": "30",
+        "text": "Choose 1 of your opponent's Active Pokémon's attacks and use it as this attack."
+      }
+    ],
+    "retreatCost": 1,
+    "imageSmall": "https://images.pokemontcg.io/sv3pt5/193.png",
+    "imageLarge": "https://images.pokemontcg.io/sv3pt5/193_hires.png"
+  },
+  {
+    "id": "sv3pt5-198",
+    "name": "Venusaur ex",
+    "hp": 340,
+    "type": "grass",
+    "types": [
+      "Grass"
+    ],
+    "rarity": "mythic",
+    "rarityLabel": "Special Illustration Rare",
+    "isEx": true,
+    "stage": "Stage 2",
+    "attacks": [
+      {
+        "name": "Dangerous Toxwhip",
+        "cost": [
+          "Grass",
+          "Grass",
+          "Colorless"
+        ],
+        "damage": 150,
+        "damageText": "150",
+        "text": "Your opponent's Active Pokémon is now Confused and Poisoned."
+      }
+    ],
+    "retreatCost": 4,
+    "imageSmall": "https://images.pokemontcg.io/sv3pt5/198.png",
+    "imageLarge": "https://images.pokemontcg.io/sv3pt5/198_hires.png"
+  },
+  {
+    "id": "sv3pt5-199",
+    "name": "Charizard ex",
+    "hp": 330,
+    "type": "fire",
+    "types": [
+      "Fire"
+    ],
+    "rarity": "mythic",
+    "rarityLabel": "Special Illustration Rare",
+    "isEx": true,
+    "stage": "Stage 2",
+    "attacks": [
+      {
+        "name": "Brave Wing",
+        "cost": [
+          "Fire"
+        ],
+        "damage": 60,
+        "damageText": "60+",
+        "text": "If this Pokémon has any damage counters on it, this attack does 100 more damage."
+      },
+      {
+        "name": "Explosive Vortex",
+        "cost": [
+          "Fire",
+          "Fire",
+          "Fire",
+          "Fire"
+        ],
+        "damage": 330,
+        "damageText": "330",
+        "text": "Discard 3 Energy from this Pokémon."
+      }
+    ],
+    "retreatCost": 2,
+    "imageSmall": "https://images.pokemontcg.io/sv3pt5/199.png",
+    "imageLarge": "https://images.pokemontcg.io/sv3pt5/199_hires.png"
+  },
+  {
+    "id": "sv3pt5-200",
+    "name": "Blastoise ex",
+    "hp": 330,
+    "type": "water",
+    "types": [
+      "Water"
+    ],
+    "rarity": "mythic",
+    "rarityLabel": "Special Illustration Rare",
+    "isEx": true,
+    "stage": "Stage 2",
+    "attacks": [
+      {
+        "name": "Twin Cannons",
+        "cost": [
+          "Water",
+          "Water"
+        ],
+        "damage": 140,
+        "damageText": "140×",
+        "text": "Discard up to 2 Basic Water Energy cards from your hand. This attack does 140 damage for each card you discarded in this way."
+      }
+    ],
+    "retreatCost": 3,
+    "imageSmall": "https://images.pokemontcg.io/sv3pt5/200.png",
+    "imageLarge": "https://images.pokemontcg.io/sv3pt5/200_hires.png"
+  },
+  {
+    "id": "sv3pt5-201",
+    "name": "Alakazam ex",
+    "hp": 310,
+    "type": "psychic",
+    "types": [
+      "Psychic"
+    ],
+    "rarity": "mythic",
+    "rarityLabel": "Special Illustration Rare",
+    "isEx": true,
+    "stage": "Stage 2",
+    "attacks": [
+      {
+        "name": "Mind Jack",
+        "cost": [
+          "Colorless",
+          "Colorless"
+        ],
+        "damage": 90,
+        "damageText": "90+",
+        "text": "This attack does 30 more damage for each of your opponent's Benched Pokémon."
+      },
+      {
+        "name": "Dimensional Hand",
+        "cost": [
+          "Psychic",
+          "Psychic"
+        ],
+        "damage": 120,
+        "damageText": "120",
+        "text": "This attack can be used even if this Pokémon is on the Bench."
+      }
+    ],
+    "retreatCost": 1,
+    "imageSmall": "https://images.pokemontcg.io/sv3pt5/201.png",
+    "imageLarge": "https://images.pokemontcg.io/sv3pt5/201_hires.png"
+  },
+  {
+    "id": "sv3pt5-202",
+    "name": "Zapdos ex",
+    "hp": 200,
+    "type": "lightning",
+    "types": [
+      "Lightning"
+    ],
+    "rarity": "mythic",
+    "rarityLabel": "Special Illustration Rare",
+    "isEx": true,
+    "stage": "Basic",
+    "attacks": [
+      {
+        "name": "Multishot Lightning",
+        "cost": [
+          "Lightning",
+          "Lightning",
+          "Lightning"
+        ],
+        "damage": 120,
+        "damageText": "120",
+        "text": "This attack also does 90 damage to 1 of your opponent's Benched Pokémon that has any damage counters on it. (Don't apply Weakness and Resistance for Benched Pokémon.)"
+      }
+    ],
+    "retreatCost": 2,
+    "imageSmall": "https://images.pokemontcg.io/sv3pt5/202.png",
+    "imageLarge": "https://images.pokemontcg.io/sv3pt5/202_hires.png"
+  },
+  {
+    "id": "sv3pt5-205",
+    "name": "Mew ex",
+    "hp": 180,
+    "type": "psychic",
+    "types": [
+      "Psychic"
+    ],
+    "rarity": "mythic",
+    "rarityLabel": "Hyper Rare",
+    "isEx": true,
+    "stage": "Basic",
+    "attacks": [
+      {
+        "name": "Genome Hacking",
+        "cost": [
+          "Colorless",
+          "Colorless",
+          "Colorless"
+        ],
+        "damage": 30,
+        "damageText": "30",
+        "text": "Choose 1 of your opponent's Active Pokémon's attacks and use it as this attack."
+      }
+    ],
+    "retreatCost": 1,
+    "imageSmall": "https://images.pokemontcg.io/sv3pt5/205.png",
+    "imageLarge": "https://images.pokemontcg.io/sv3pt5/205_hires.png"
+  },
+  {
+    "id": "cel25-1",
+    "name": "Ho-Oh",
+    "hp": 130,
+    "type": "fire",
+    "types": [
+      "Fire"
+    ],
+    "rarity": "epic",
+    "rarityLabel": "Rare",
+    "isEx": false,
+    "stage": "Basic",
+    "attacks": [
+      {
+        "name": "Sacred Fire",
+        "cost": [
+          "Fire",
+          "Colorless"
+        ],
+        "damage": 30,
+        "damageText": "30",
+        "text": "This attack does 50 damage to 1 of your opponent's Pokémon. (Don't apply Weakness and Resistance for Benched Pokémon.)"
+      },
+      {
+        "name": "Fire Blast",
+        "cost": [
+          "Fire",
+          "Fire",
+          "Colorless"
+        ],
+        "damage": 120,
+        "damageText": "120",
+        "text": "Discard an Energy from this Pokémon."
+      }
+    ],
+    "retreatCost": 2,
+    "imageSmall": "https://images.pokemontcg.io/cel25/1.png",
+    "imageLarge": "https://images.pokemontcg.io/cel25/1_hires.png"
+  },
+  {
+    "id": "cel25-2",
+    "name": "Reshiram",
+    "hp": 130,
+    "type": "fire",
+    "types": [
+      "Fire"
+    ],
+    "rarity": "epic",
+    "rarityLabel": "Rare",
+    "isEx": false,
+    "stage": "Basic",
+    "attacks": [
+      {
+        "name": "Scorching Wind",
+        "cost": [
+          "Colorless",
+          "Colorless"
+        ],
+        "damage": 30,
+        "damageText": "30",
+        "text": "This attack does 20 damage to each of your opponent's Benched Pokémon. (Don't apply Weakness and Resistance for Benched Pokémon.)"
+      },
+      {
+        "name": "Black Flame",
+        "cost": [
+          "Fire",
+          "Fire",
+          "Colorless"
+        ],
+        "damage": 80,
+        "damageText": "80+",
+        "text": "If Zekrom is on your Bench, this attack does 80 more damage."
+      }
+    ],
+    "retreatCost": 3,
+    "imageSmall": "https://images.pokemontcg.io/cel25/2.png",
+    "imageLarge": "https://images.pokemontcg.io/cel25/2_hires.png"
+  },
+  {
+    "id": "cel25-3",
+    "name": "Kyogre",
+    "hp": 130,
+    "type": "water",
+    "types": [
+      "Water"
+    ],
+    "rarity": "epic",
+    "rarityLabel": "Rare",
+    "isEx": false,
+    "stage": "Basic",
+    "attacks": [
+      {
+        "name": "Aqua Storm",
+        "cost": [
+          "Water",
+          "Water",
+          "Colorless"
+        ],
+        "damage": 30,
+        "damageText": "30",
+        "text": "Discard the top 5 cards of your deck, and then choose 2 of your opponent's Benched Pokémon. This attack does 50 damage for each Energy card you discarded in this way to each of those Pokémon. (Don't apply Weakness and Resistance for Benched Pokémon.)"
+      },
+      {
+        "name": "Surf",
+        "cost": [
+          "Water",
+          "Water",
+          "Colorless",
+          "Colorless"
+        ],
+        "damage": 120,
+        "damageText": "120",
+        "text": ""
+      }
+    ],
+    "retreatCost": 3,
+    "imageSmall": "https://images.pokemontcg.io/cel25/3.png",
+    "imageLarge": "https://images.pokemontcg.io/cel25/3_hires.png"
+  },
+  {
+    "id": "cel25-4",
+    "name": "Palkia",
+    "hp": 130,
+    "type": "water",
+    "types": [
+      "Water"
+    ],
+    "rarity": "epic",
+    "rarityLabel": "Rare",
+    "isEx": false,
+    "stage": "Basic",
+    "attacks": [
+      {
+        "name": "Overdrive Smash",
+        "cost": [
+          "Water",
+          "Colorless",
+          "Colorless"
+        ],
+        "damage": 80,
+        "damageText": "80+",
+        "text": "During your next turn, this Pokémon's Overdrive Smash attack does 80 more damage (before applying Weakness and Resistance)."
+      }
+    ],
+    "retreatCost": 2,
+    "imageSmall": "https://images.pokemontcg.io/cel25/4.png",
+    "imageLarge": "https://images.pokemontcg.io/cel25/4_hires.png"
+  },
+  {
+    "id": "cel25-5",
+    "name": "Pikachu",
+    "hp": 60,
+    "type": "lightning",
+    "types": [
+      "Lightning"
+    ],
+    "rarity": "epic",
+    "rarityLabel": "Rare Holo",
+    "isEx": false,
+    "stage": "Basic",
+    "attacks": [
+      {
+        "name": "Gnaw",
+        "cost": [
+          "Colorless"
+        ],
+        "damage": 10,
+        "damageText": "10",
+        "text": ""
+      },
+      {
+        "name": "Thunder Jolt",
+        "cost": [
+          "Lightning",
+          "Colorless"
+        ],
+        "damage": 30,
+        "damageText": "30",
+        "text": "Flip a coin. If tails, this Pokémon also does 10 damage to itself."
+      }
+    ],
+    "retreatCost": 1,
+    "imageSmall": "https://images.pokemontcg.io/cel25/5.png",
+    "imageLarge": "https://images.pokemontcg.io/cel25/5_hires.png"
+  },
+  {
+    "id": "cel25-6",
+    "name": "Flying Pikachu V",
+    "hp": 190,
+    "type": "lightning",
+    "types": [
+      "Lightning"
+    ],
+    "rarity": "epic",
+    "rarityLabel": "Rare Holo V",
+    "isEx": false,
+    "stage": "Basic",
+    "attacks": [
+      {
+        "name": "Thunder Shock",
+        "cost": [
+          "Lightning"
+        ],
+        "damage": 20,
+        "damageText": "20",
+        "text": "Flip a coin. If heads, your opponent's Active Pokémon is now Paralyzed."
+      },
+      {
+        "name": "Fly",
+        "cost": [
+          "Colorless",
+          "Colorless",
+          "Colorless"
+        ],
+        "damage": 120,
+        "damageText": "120",
+        "text": "Flip a coin. If tails, this attack does nothing. If heads, during your opponent's next turn, prevent all damage from and effects of attacks done to this Pokémon."
+      }
+    ],
+    "retreatCost": 1,
+    "imageSmall": "https://images.pokemontcg.io/cel25/6.png",
+    "imageLarge": "https://images.pokemontcg.io/cel25/6_hires.png"
+  },
+  {
+    "id": "cel25-7",
+    "name": "Flying Pikachu VMAX",
+    "hp": 310,
+    "type": "lightning",
+    "types": [
+      "Lightning"
+    ],
+    "rarity": "epic",
+    "rarityLabel": "Rare Holo VMAX",
+    "isEx": false,
+    "stage": "VMAX",
+    "attacks": [
+      {
+        "name": "Max Balloon",
+        "cost": [
+          "Lightning",
+          "Colorless",
+          "Colorless"
+        ],
+        "damage": 160,
+        "damageText": "160",
+        "text": "During your opponent's next turn, prevent all damage done to this Pokémon by attacks from Basic Pokémon."
+      }
+    ],
+    "retreatCost": 1,
+    "imageSmall": "https://images.pokemontcg.io/cel25/7.png",
+    "imageLarge": "https://images.pokemontcg.io/cel25/7_hires.png"
+  },
+  {
+    "id": "cel25-8",
+    "name": "Surfing Pikachu V",
+    "hp": 200,
+    "type": "lightning",
+    "types": [
+      "Lightning"
+    ],
+    "rarity": "epic",
+    "rarityLabel": "Rare Holo V",
+    "isEx": false,
+    "stage": "Basic",
+    "attacks": [
+      {
+        "name": "Surf",
+        "cost": [
+          "Water",
+          "Water",
+          "Water"
+        ],
+        "damage": 150,
+        "damageText": "150",
+        "text": ""
+      }
+    ],
+    "retreatCost": 1,
+    "imageSmall": "https://images.pokemontcg.io/cel25/8.png",
+    "imageLarge": "https://images.pokemontcg.io/cel25/8_hires.png"
+  },
+  {
+    "id": "cel25-9",
+    "name": "Surfing Pikachu VMAX",
+    "hp": 310,
+    "type": "lightning",
+    "types": [
+      "Lightning"
+    ],
+    "rarity": "epic",
+    "rarityLabel": "Rare Holo VMAX",
+    "isEx": false,
+    "stage": "VMAX",
+    "attacks": [
+      {
+        "name": "Max Surfer",
+        "cost": [
+          "Water",
+          "Water",
+          "Water"
+        ],
+        "damage": 160,
+        "damageText": "160",
+        "text": "This attack also does 30 damage to each of your opponent's Benched Pokémon. (Don't apply Weakness and Resistance for Benched Pokémon.)"
+      }
+    ],
+    "retreatCost": 1,
+    "imageSmall": "https://images.pokemontcg.io/cel25/9.png",
+    "imageLarge": "https://images.pokemontcg.io/cel25/9_hires.png"
+  },
+  {
+    "id": "cel25-10",
+    "name": "Zekrom",
+    "hp": 130,
+    "type": "lightning",
+    "types": [
+      "Lightning"
+    ],
+    "rarity": "epic",
+    "rarityLabel": "Rare",
+    "isEx": false,
+    "stage": "Basic",
+    "attacks": [
+      {
+        "name": "Field Crush",
+        "cost": [
+          "Colorless",
+          "Colorless"
+        ],
+        "damage": 30,
+        "damageText": "30",
+        "text": "If your opponent has a Stadium in play, discard it."
+      },
+      {
+        "name": "White Thunder",
+        "cost": [
+          "Lightning",
+          "Lightning",
+          "Colorless"
+        ],
+        "damage": 80,
+        "damageText": "80+",
+        "text": "If Reshiram is on your Bench, this attack does 80 more damage."
+      }
+    ],
+    "retreatCost": 3,
+    "imageSmall": "https://images.pokemontcg.io/cel25/10.png",
+    "imageLarge": "https://images.pokemontcg.io/cel25/10_hires.png"
+  },
+  {
+    "id": "cel25-11",
+    "name": "Mew",
+    "hp": 60,
+    "type": "psychic",
+    "types": [
+      "Psychic"
+    ],
+    "rarity": "epic",
+    "rarityLabel": "Rare Holo",
+    "isEx": false,
+    "stage": "Basic",
+    "attacks": [
+      {
+        "name": "Psyshot",
+        "cost": [
+          "Psychic",
+          "Colorless"
+        ],
+        "damage": 30,
+        "damageText": "30",
+        "text": ""
+      }
+    ],
+    "retreatCost": 1,
+    "imageSmall": "https://images.pokemontcg.io/cel25/11.png",
+    "imageLarge": "https://images.pokemontcg.io/cel25/11_hires.png"
+  },
+  {
+    "id": "cel25-17",
+    "name": "Groudon",
+    "hp": 130,
+    "type": "fighting",
+    "types": [
+      "Fighting"
+    ],
+    "rarity": "epic",
+    "rarityLabel": "Rare",
+    "isEx": false,
+    "stage": "Basic",
+    "attacks": [
+      {
+        "name": "Magma Volcano",
+        "cost": [
+          "Fighting",
+          "Fighting",
+          "Colorless"
+        ],
+        "damage": 80,
+        "damageText": "80×",
+        "text": "Discard the top 5 cards of your deck. This attack does 80 damage for each Energy card you discarded in this way."
+      },
+      {
+        "name": "Massive Rend",
+        "cost": [
+          "Fighting",
+          "Fighting",
+          "Colorless",
+          "Colorless"
+        ],
+        "damage": 120,
+        "damageText": "120",
+        "text": ""
+      }
+    ],
+    "retreatCost": 3,
+    "imageSmall": "https://images.pokemontcg.io/cel25/17.png",
+    "imageLarge": "https://images.pokemontcg.io/cel25/17_hires.png"
+  },
+  {
+    "id": "cel25-20",
+    "name": "Dialga",
+    "hp": 130,
+    "type": "metal",
+    "types": [
+      "Metal"
+    ],
+    "rarity": "epic",
+    "rarityLabel": "Rare",
+    "isEx": false,
+    "stage": "Basic",
+    "attacks": [
+      {
+        "name": "Temporal Backflow",
+        "cost": [
+          "Metal"
+        ],
+        "damage": 30,
+        "damageText": "30",
+        "text": "Put a card from your discard pile into your hand."
+      },
+      {
+        "name": "Metal Blast",
+        "cost": [
+          "Colorless",
+          "Colorless",
+          "Colorless"
+        ],
+        "damage": 60,
+        "damageText": "60+",
+        "text": "This attack does 20 more damage for each Metal Energy attached to this Pokémon."
+      }
+    ],
+    "retreatCost": 2,
+    "imageSmall": "https://images.pokemontcg.io/cel25/20.png",
+    "imageLarge": "https://images.pokemontcg.io/cel25/20_hires.png"
+  },
+  {
+    "id": "cel25-22",
+    "name": "Lugia",
+    "hp": 130,
+    "type": "colorless",
+    "types": [
+      "Colorless"
+    ],
+    "rarity": "epic",
+    "rarityLabel": "Rare",
+    "isEx": false,
+    "stage": "Basic",
+    "attacks": [
+      {
+        "name": "Aero Ball",
+        "cost": [
+          "Colorless",
+          "Colorless"
+        ],
+        "damage": 20,
+        "damageText": "20×",
+        "text": "This attack does 20 damage for each Energy attached to both Active Pokémon."
+      },
+      {
+        "name": "Deep Crush",
+        "cost": [
+          "Colorless",
+          "Colorless",
+          "Colorless",
+          "Colorless"
+        ],
+        "damage": 160,
+        "damageText": "160",
+        "text": "During your next turn, this Pokémon can't attack."
+      }
+    ],
+    "retreatCost": 2,
+    "imageSmall": "https://images.pokemontcg.io/cel25/22.png",
+    "imageLarge": "https://images.pokemontcg.io/cel25/22_hires.png"
+  },
+  {
+    "id": "cel25-25",
+    "name": "Mew",
+    "hp": 60,
+    "type": "psychic",
+    "types": [
+      "Psychic"
+    ],
+    "rarity": "epic",
+    "rarityLabel": "Rare Holo",
+    "isEx": false,
+    "stage": "Basic",
+    "attacks": [
+      {
+        "name": "Psyshot",
+        "cost": [
+          "Psychic",
+          "Colorless"
+        ],
+        "damage": 30,
+        "damageText": "30",
+        "text": ""
+      }
+    ],
+    "retreatCost": 1,
+    "imageSmall": "https://images.pokemontcg.io/cel25/25.png",
+    "imageLarge": "https://images.pokemontcg.io/cel25/25_hires.png"
   }
 ];
 
-// --- ELEMENTAL TYPES MATRIX ---
-// Multipliers: 2.0 = Super Effective, 0.5 = Not Very Effective, 1.0 = Normal
-const TYPE_CHART = {
-  normal:   { rock: 0.5, ghost: 0, steel: 0.5 },
-  fire:     { fire: 0.5, water: 0.5, grass: 2.0, ice: 2.0, bug: 2.0, rock: 0.5, dragon: 0.5, steel: 2.0 },
-  water:    { fire: 2.0, water: 0.5, grass: 0.5, ground: 2.0, rock: 2.0, dragon: 0.5 },
-  grass:    { fire: 0.5, water: 2.0, grass: 0.5, poison: 0.5, ground: 2.0, flying: 0.5, bug: 0.5, rock: 2.0, dragon: 0.5, steel: 0.5 },
-  electric: { water: 2.0, electric: 0.5, grass: 0.5, ground: 0, flying: 2.0, dragon: 0.5 },
-  ice:      { fire: 0.5, water: 0.5, grass: 2.0, ice: 0.5, ground: 2.0, flying: 2.0, dragon: 2.0, steel: 0.5 },
-  fighting: { normal: 2.0, ice: 2.0, poison: 0.5, flying: 0.5, psychic: 0.5, bug: 0.5, rock: 2.0, ghost: 0, dark: 2.0, steel: 2.0, fairy: 0.5 },
-  poison:   { grass: 2.0, poison: 0.5, ground: 0.5, rock: 0.5, ghost: 0.5, steel: 0, fairy: 2.0 },
-  ground:   { fire: 2.0, electric: 2.0, grass: 0.5, poison: 2.0, flying: 0, bug: 0.5, rock: 2.0, steel: 2.0 },
-  flying:   { electric: 0.5, grass: 2.0, fighting: 2.0, bug: 2.0, rock: 0.5, steel: 0.5 },
-  psychic:  { fighting: 2.0, poison: 2.0, psychic: 0.5, steel: 0.5, dark: 0 },
-  bug:      { fire: 0.5, grass: 2.0, fighting: 0.5, poison: 0.5, flying: 0.5, psychic: 2.0, ghost: 0.5, dark: 2.0, steel: 0.5, fairy: 0.5 },
-  rock:     { fire: 2.0, ice: 2.0, fighting: 0.5, ground: 0.5, flying: 2.0, bug: 2.0, steel: 0.5 },
-  ghost:    { normal: 0, psychic: 2.0, ghost: 2.0, dark: 0.5 },
-  dragon:   { dragon: 2.0, steel: 0.5, fairy: 0 },
-  steel:    { fire: 0.5, water: 0.5, electric: 0.5, ice: 2.0, rock: 2.0, steel: 0.5, fairy: 2.0 },
-  dark:     { fighting: 0.5, psychic: 2.0, ghost: 2.0, dark: 0.5, fairy: 0.5 },
-  fairy:    { fire: 0.5, fighting: 2.0, poison: 0.5, dragon: 2.0, steel: 0.5 }
-};
-
-// --- PACK DEFINITIONS ---
+// 3 Booster Packs inspired by Pokémon TCG Pocket
 const BOOSTER_PACKS = [
   {
-    id: "poke_pack",
-    name: "Poké Pack Tiêu Chuẩn",
-    tag: "Khởi Đầu",
+    id: 'pack_151',
+    name: 'Gói Thẻ Pokémon 151',
+    subtitle: 'Kanto Heritage Edition',
+    tag: '🔥 Phổ Biến Nhất',
     cost: 100,
-    cardCount: 4,
-    color: "from-blue-600 via-indigo-600 to-blue-800",
-    border: "border-blue-400/40",
-    rates: { common: 0.65, rare: 0.25, epic: 0.08, legendary: 0.02, mythic: 0.00 }
+    cardCount: 5,
+    coverCardImage: 'https://images.pokemontcg.io/sv3pt5/6_hires.png',
+    color: 'from-amber-600 via-rose-600 to-indigo-900',
+    border: 'border-amber-400/50',
+    rates: { common: 0.50, rare: 0.30, epic: 0.14, legendary: 0.05, mythic: 0.01 }
   },
   {
-    id: "great_pack",
-    name: "Great Pack Chiến Binh",
-    tag: "Đảm bảo 1 Hiếm+",
+    id: 'pack_celebrations',
+    name: 'Gói Kỷ Niệm Celebrations',
+    subtitle: 'Golden 25th Anniversary',
+    tag: '👑 Đảm Bảo Thẻ EX/Hiếm',
     cost: 250,
     cardCount: 5,
-    color: "from-purple-600 via-fuchsia-600 to-indigo-900",
-    border: "border-purple-400/50",
-    rates: { common: 0.40, rare: 0.40, epic: 0.15, legendary: 0.04, mythic: 0.01 }
+    coverCardImage: 'https://images.pokemontcg.io/cel25/25_hires.png',
+    color: 'from-purple-900 via-indigo-900 to-amber-900',
+    border: 'border-purple-400/50',
+    rates: { common: 0.20, rare: 0.35, epic: 0.28, legendary: 0.14, mythic: 0.03 }
   },
   {
-    id: "master_pack",
-    name: "Master Mythic Huyền Thoại",
-    tag: "Tỷ lệ Vàng",
+    id: 'pack_mythic_god',
+    name: 'Gói Siêu Thần Thoại God Pack',
+    subtitle: 'Special Illustration & Gold Cards',
+    tag: '✨ Tỷ Lệ Thần Thoại Cực Cao',
     cost: 500,
     cardCount: 5,
-    color: "from-amber-500 via-rose-600 to-purple-900",
-    border: "border-amber-400/70",
-    rates: { common: 0.15, rare: 0.35, epic: 0.30, legendary: 0.15, mythic: 0.05 }
+    coverCardImage: 'https://images.pokemontcg.io/sv3pt5/205_hires.png',
+    color: 'from-amber-500 via-yellow-600 to-rose-900',
+    border: 'border-amber-300',
+    rates: { rare: 0.30, epic: 0.35, legendary: 0.25, mythic: 0.10 }
   }
 ];
 
-// --- GYM LEADERS & OPPONENTS ---
+// Gym Leaders for TCG Battle Arena
 const GYM_LEADERS = [
   {
-    id: "wild_battle",
-    name: "Bụi Cỏ Hoang Dã",
-    trainerTitle: "Pokémon Hoang Dã",
-    avatar: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/133.png",
-    rewardCoins: 50,
-    rewardExp: 35,
-    difficulty: "Dễ",
-    pokemon: 133 // Eevee or random
-  },
-  {
-    id: "brock",
-    name: "Thủ Lĩnh Brock",
-    trainerTitle: "Nhà Thi Đấu Pewter",
-    avatar: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/74.png",
+    id: 'brock',
+    name: 'Brock',
+    gym: 'Pewter Gym (Đá Cứng)',
+    avatar: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/trainers/brock.png',
+    deckCardId: 'sv3pt5-74',
+    difficulty: 'Tập Sự',
     rewardCoins: 120,
-    rewardExp: 80,
-    difficulty: "Trung Bình",
-    pokemon: 74 // Geodude
+    rewardExp: 60
   },
   {
-    id: "misty",
-    name: "Thủ Lĩnh Misty",
-    trainerTitle: "Nhà Thi Đấu Cerulean",
-    avatar: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/9.png",
+    id: 'misty',
+    name: 'Misty',
+    gym: 'Cerulean Gym (Nàng Tiên Nước)',
+    avatar: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/trainers/misty.png',
+    deckCardId: 'sv3pt5-9',
+    difficulty: 'Trung Bình',
     rewardCoins: 200,
-    rewardExp: 140,
-    difficulty: "Khó",
-    pokemon: 9 // Blastoise
+    rewardExp: 100
   },
   {
-    id: "lt_surge",
-    name: "Thủ Lĩnh Lt. Surge",
-    trainerTitle: "Nhà Thi Đấu Vermilion",
-    avatar: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png",
+    id: 'surge',
+    name: 'Lt. Surge',
+    gym: 'Vermilion Gym (Sĩ Quan Tia Chớp)',
+    avatar: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/trainers/surge.png',
+    deckCardId: 'sv3pt5-25',
+    difficulty: 'Khó',
     rewardCoins: 280,
-    rewardExp: 200,
-    difficulty: "Khó",
-    pokemon: 25 // Pikachu
+    rewardExp: 150
   },
   {
-    id: "giovanni",
-    name: "Trùm Băng Rocket Giovanni",
-    trainerTitle: "Nhà Thi Đấu Viridian",
-    avatar: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/248.png",
+    id: 'sabrina',
+    name: 'Sabrina',
+    gym: 'Saffron Gym (Bậc Thầy Siêu Năng)',
+    avatar: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/trainers/sabrina.png',
+    deckCardId: 'sv3pt5-65',
+    difficulty: 'Cực Khó',
     rewardCoins: 400,
-    rewardExp: 320,
-    difficulty: "Cực Khó",
-    pokemon: 248 // Tyranitar
+    rewardExp: 220
   },
   {
-    id: "champion_red",
-    name: "Quán Quân Red",
-    trainerTitle: "Đỉnh Núi Silver",
-    avatar: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/6.png",
-    rewardCoins: 650,
-    rewardExp: 500,
-    difficulty: "Huyền Thoại",
-    pokemon: 6 // Charizard / Mewtwo
+    id: 'red',
+    name: 'Quán Quân Red',
+    gym: 'Đỉnh Núi Bạc (Champion Red)',
+    avatar: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/trainers/red.png',
+    deckCardId: 'sv3pt5-199',
+    difficulty: 'Huyền Thoại',
+    rewardCoins: 800,
+    rewardExp: 500
   }
 ];
 
-// Helper: Get Official Pokémon Artwork URL
-function getPokemonImage(id) {
-  return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png`;
-}
+// Elemental weakness chart
+const TYPE_CHART = {
+  fire: { grass: 2.0, steel: 2.0, water: 0.5 },
+  water: { fire: 2.0, rock: 2.0, grass: 0.5 },
+  grass: { water: 2.0, rock: 2.0, fire: 0.5 },
+  lightning: { water: 2.0, grass: 0.5 },
+  electric: { water: 2.0, grass: 0.5 },
+  psychic: { fighting: 2.0 },
+  fighting: { colorless: 2.0, rock: 2.0 },
+  dragon: { dragon: 2.0 }
+};

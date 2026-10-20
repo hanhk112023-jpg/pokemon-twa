@@ -1,5 +1,6 @@
 /**
- * Booster Pack Gacha Logic & 3D Opening Ceremony
+ * Pokémon TCG Pocket 3D Gacha System
+ * Real Card Scans & Holographic Foil Tilt Physics
  */
 
 class GachaSystem {
@@ -10,7 +11,7 @@ class GachaSystem {
     this.revealedIndex = 0;
   }
 
-  // Roll a card based on pack probability
+  // Roll a card based on booster pack drop rates
   rollCard(pack) {
     const rand = Math.random();
     let accumulated = 0;
@@ -24,53 +25,47 @@ class GachaSystem {
       }
     }
 
-    // Filter pokemon by rarity
-    const pool = POKEMON_DATA.filter((p) => p.rarity === selectedRarity);
+    const pool = POKEMON_TCG_CARDS.filter((p) => p.rarity === selectedRarity);
     const chosen = pool.length > 0 
       ? pool[Math.floor(Math.random() * pool.length)]
-      : POKEMON_DATA[Math.floor(Math.random() * POKEMON_DATA.length)];
+      : POKEMON_TCG_CARDS[Math.floor(Math.random() * POKEMON_TCG_CARDS.length)];
 
-    // Deep clone card for player's instance
     return {
       ...chosen,
-      instanceId: "card_" + Date.now() + "_" + Math.floor(Math.random() * 10000),
-      level: 1,
-      exp: 0,
+      instanceId: "tcg_" + Date.now() + "_" + Math.floor(Math.random() * 100000),
+      currentHp: chosen.hp,
+      maxHp: chosen.hp,
+      attachedEnergy: 0,
       pulledAt: new Date().toISOString()
     };
   }
 
-  // Start opening pack ceremony
+  // Open Booster Pack
   openPack(packId) {
     const pack = BOOSTER_PACKS.find((p) => p.id === packId);
     if (!pack) return;
 
-    // Check balance
     if (this.app.state.coins < pack.cost) {
       this.app.showToast("Không đủ Xu! Hãy chiến đấu ở Đấu trường để kiếm thêm Xu 🪙", "error");
       soundEngine.playTone(220, "square", 0.15, 0.2);
       return;
     }
 
-    // Deduct coins & record quest progress
     this.app.state.coins -= pack.cost;
     this.app.recordQuestProgress("open_pack");
     this.app.saveState();
     this.app.renderHeaderStats();
 
-    // Generate pulled cards
     this.openedCards = [];
     for (let i = 0; i < pack.cardCount; i++) {
       this.openedCards.push(this.rollCard(pack));
     }
 
-    // Trigger haptic & sound
     if (window.Telegram?.WebApp?.HapticFeedback) {
       window.Telegram.WebApp.HapticFeedback.impactOccurred("heavy");
     }
     soundEngine.playPackRip();
 
-    // Show Pack Opening Modal Ceremony
     this.showOpeningModal(pack);
   }
 
@@ -84,158 +79,141 @@ class GachaSystem {
 
     const container = document.getElementById("pack-stage-container");
     container.innerHTML = `
-      <div id="pack-foil-wrapper" class="relative cursor-pointer transition-transform duration-300 transform hover:scale-105 active:scale-95" onclick="gachaSystem.ripFoil()">
-        <!-- Pack Foil Top -->
-        <div id="pack-foil-top" class="w-64 h-24 rounded-t-2xl bg-gradient-to-r ${pack.color} border-t-2 border-x-2 ${pack.border} shadow-2xl relative overflow-hidden flex flex-col items-center justify-center p-4">
-          <div class="absolute inset-0 bg-white/10 backdrop-blur-[1px]"></div>
-          <div class="z-10 text-center">
-            <span class="inline-block px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-black/40 text-amber-300 border border-amber-400/40 mb-1">
-              ${pack.tag}
-            </span>
-            <h3 class="text-white font-extrabold text-sm drop-shadow-md tracking-wide">${pack.name}</h3>
-          </div>
-          <!-- Tear Line Indicator -->
-          <div class="absolute bottom-0 left-0 right-0 h-1 border-b-2 border-dashed border-white/50"></div>
+      <div id="pack-foil-wrapper" class="booster-pack-3d bg-gradient-to-b ${pack.color} border-2 ${pack.border} flex flex-col justify-between p-4 shadow-2xl" onclick="gachaSystem.ripFoil()">
+        <!-- Top crimp -->
+        <div id="pack-crimp-top" class="booster-pack-top-crimp"></div>
+
+        <!-- Pack Art & Logo -->
+        <div class="text-center pt-5 z-10">
+          <span class="inline-block px-3 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-black/60 text-amber-300 border border-amber-400/40 shadow">
+            ${pack.tag}
+          </span>
+          <h3 class="text-white font-black text-lg drop-shadow-md mt-1 tracking-wide">${pack.name}</h3>
+          <p class="text-[11px] text-amber-200/90 font-medium">${pack.subtitle}</p>
         </div>
 
-        <!-- Pack Foil Bottom -->
-        <div id="pack-foil-bottom" class="w-64 h-72 rounded-b-2xl bg-gradient-to-br ${pack.color} border-b-2 border-x-2 ${pack.border} shadow-2xl relative overflow-hidden flex flex-col items-center justify-between p-6">
-          <div class="absolute -right-10 -bottom-10 w-44 h-44 rounded-full bg-white/10 blur-xl pointer-events-none"></div>
-          
-          <div class="w-28 h-28 rounded-full bg-black/30 border border-white/20 p-2 flex items-center justify-center shadow-inner my-auto">
-            <img src="${getPokemonImage(pack.id === 'master_pack' ? 384 : pack.id === 'great_pack' ? 6 : 25)}" 
-                 class="w-full h-full object-contain filter drop-shadow-[0_10px_10px_rgba(0,0,0,0.6)] animate-pulse" />
-          </div>
-
-          <div class="text-center z-10">
-            <div class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-black/50 border border-amber-400/40 text-amber-300 font-bold text-xs tracking-wider animate-bounce">
-              <span>✂️ Chạm để xé gói thẻ</span>
-            </div>
-            <p class="text-[11px] text-slate-300/80 mt-2 font-medium">Bên trong gồm ${pack.cardCount} thẻ bài ngẫu nhiên</p>
+        <!-- Center Foil Art -->
+        <div class="my-auto relative flex items-center justify-center p-2 z-10">
+          <div class="w-36 h-48 rounded-xl overflow-hidden shadow-2xl border-2 border-white/20 transform -rotate-3 hover:rotate-0 transition-transform duration-300">
+            <img src="${pack.coverCardImage}" class="w-full h-full object-cover filter drop-shadow" />
           </div>
         </div>
+
+        <!-- Bottom Action CTA -->
+        <div class="text-center pb-5 z-10">
+          <div class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-black/70 border border-amber-400/60 text-amber-300 font-extrabold text-xs shadow-lg animate-bounce">
+            <span>✂️ Chạm Hoặc Quẹt Để Xé Bao</span>
+          </div>
+          <p class="text-[10px] text-slate-300 mt-1.5 font-medium">5 Thẻ Pokémon TCG Chính Hãng</p>
+        </div>
+
+        <!-- Bottom crimp -->
+        <div id="pack-crimp-bottom" class="booster-pack-bottom-crimp"></div>
       </div>
     `;
   }
 
-  // Rip open the booster foil
+  // Rip open the pack
   ripFoil() {
-    const top = document.getElementById("pack-foil-top");
-    const bottom = document.getElementById("pack-foil-bottom");
-    if (!top || !bottom) return;
+    const wrapper = document.getElementById("pack-foil-wrapper");
+    if (!wrapper) return;
 
-    top.classList.add("tearing-left");
-    bottom.classList.add("tearing-right");
-
+    wrapper.classList.add("ripping-top");
     soundEngine.playPackRip();
+
     if (window.Telegram?.WebApp?.HapticFeedback) {
       window.Telegram.WebApp.HapticFeedback.notificationOccurred("success");
     }
 
     setTimeout(() => {
       this.displayCardsReveal();
-    }, 500);
+    }, 450);
   }
 
-  // Display Cards inside for reveal
+  // Show the 5 cards fan-out for flipping
   displayCardsReveal() {
     const container = document.getElementById("pack-stage-container");
     container.innerHTML = `
       <div class="w-full max-w-sm flex flex-col items-center">
+        <!-- Title & Counter -->
         <div class="text-center mb-3">
           <h4 class="text-white font-extrabold text-base tracking-wide flex items-center justify-center gap-2">
-            <span>✨ Chạm vào thẻ để lật</span>
-            <span id="reveal-counter" class="text-xs px-2 py-0.5 rounded-full bg-indigo-500/30 text-indigo-300 border border-indigo-500/40">
+            <span>✨ Chạm Vào Thẻ Để Lật Mở</span>
+            <span id="reveal-counter" class="text-xs px-2.5 py-0.5 rounded-full bg-amber-400/20 text-amber-300 border border-amber-400/30 font-mono">
               0/${this.openedCards.length}
             </span>
           </h4>
         </div>
 
-        <!-- Cards Deck Container -->
-        <div id="cards-deck" class="relative w-64 h-96 flex items-center justify-center">
-          ${this.openedCards.map((card, idx) => this.renderFlippableCard(card, idx)).join("")}
+        <!-- Stack of 5 Cards -->
+        <div id="cards-stack-area" class="relative w-64 h-96 flex items-center justify-center perspective-1000">
+          ${this.openedCards.map((card, idx) => this.renderFlippableTcgCard(card, idx)).join("")}
         </div>
 
         <!-- Action Controls -->
         <div class="flex items-center gap-3 mt-6 w-full px-4">
           <button onclick="gachaSystem.flipAll()" 
-                  class="flex-1 py-3 px-4 rounded-xl font-black text-xs uppercase tracking-wider bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 active:scale-95 transition-all shadow-lg flex items-center justify-center gap-1.5">
-            <span>⚡ Lật tất cả</span>
+                  class="flex-1 py-3 px-4 rounded-2xl font-black text-xs uppercase tracking-wider bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 active:scale-95 transition-all shadow-lg flex items-center justify-center gap-1.5">
+            <span>⚡ Lật Tất Cả</span>
           </button>
           <button id="btn-collect-all" onclick="gachaSystem.finishOpening()" 
-                  class="hidden flex-1 py-3 px-4 rounded-xl font-black text-xs uppercase tracking-wider bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 active:scale-95 transition-all shadow-lg shadow-amber-500/25 flex items-center justify-center gap-1.5">
-            <span>Thu Thập Hết ✨</span>
+                  class="hidden flex-1 py-3 px-4 rounded-2xl font-black text-xs uppercase tracking-wider bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 active:scale-95 transition-all shadow-xl shadow-amber-500/30 flex items-center justify-center gap-1.5 animate-pulse">
+            <span>Thu Thập Hết 🌟</span>
           </button>
         </div>
       </div>
     `;
+
+    // Attach 3D Gyro tilt listener to cards
+    this.openedCards.forEach((_, idx) => {
+      this.attachTiltPhysics(idx);
+    });
   }
 
-  renderFlippableCard(card, idx) {
-    const rarityClass = this.getRarityStyles(card.rarity);
+  // Render individual 3D Card
+  renderFlippableTcgCard(card, idx) {
     const zIndex = this.openedCards.length - idx;
-    const offset = idx * 3;
+    const offset = idx * 4;
+    const scale = 1 - idx * 0.03;
 
     return `
-      <div id="reveal-card-${idx}" 
-           class="absolute inset-0 perspective-1000 cursor-pointer select-none transition-transform duration-300"
-           style="z-index: ${zIndex}; transform: translateY(${offset}px) scale(${1 - idx * 0.03});"
+      <div id="tcg-reveal-card-${idx}" 
+           class="absolute inset-0 select-none cursor-pointer transition-transform duration-300"
+           style="z-index: ${zIndex}; transform: translateY(${offset}px) scale(${scale});"
            onclick="gachaSystem.flipCard(${idx})">
-        <div id="card-inner-${idx}" class="relative w-full h-full transform-style-preserve-3d transition-transform duration-500 rounded-2xl shadow-2xl">
+        
+        <div id="tcg-card-inner-${idx}" class="relative w-full h-full transform-style-preserve-3d transition-transform duration-500 rounded-2xl shadow-2xl tcg-card-frame">
           
-          <!-- Card Back Face -->
-          <div class="absolute inset-0 backface-hidden rounded-2xl bg-gradient-to-br from-indigo-950 via-slate-900 to-blue-950 border-2 border-indigo-500/40 p-4 flex flex-col items-center justify-center shadow-2xl overflow-hidden">
-            <div class="absolute -top-12 -right-12 w-32 h-32 rounded-full bg-blue-500/10 blur-xl"></div>
-            <div class="w-24 h-24 rounded-full border-4 border-amber-400/80 bg-red-600/90 flex flex-col items-center justify-center shadow-xl relative overflow-hidden">
-              <div class="w-full h-1/2 bg-red-600"></div>
-              <div class="w-full h-1/2 bg-white"></div>
-              <div class="absolute inset-x-0 h-2 bg-slate-900 top-1/2 -translate-y-1/2"></div>
-              <div class="absolute w-8 h-8 rounded-full bg-white border-4 border-slate-900 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center shadow-md">
-                <div class="w-2 h-2 rounded-full bg-slate-900"></div>
+          <!-- Card Back Face: Official Classic TCG Back -->
+          <div class="absolute inset-0 backface-hidden rounded-2xl border-2 border-amber-400/40 p-2 flex flex-col items-center justify-center shadow-2xl overflow-hidden bg-gradient-to-br from-indigo-950 via-slate-900 to-blue-950">
+            <div class="w-full h-full rounded-xl border border-white/20 flex flex-col items-center justify-center relative overflow-hidden bg-[#182346]">
+              <div class="w-28 h-28 rounded-full border-4 border-amber-400/80 bg-red-600/95 flex flex-col items-center justify-center shadow-xl relative overflow-hidden">
+                <div class="w-full h-1/2 bg-red-600"></div>
+                <div class="w-full h-1/2 bg-white"></div>
+                <div class="absolute inset-x-0 h-2.5 bg-slate-900 top-1/2 -translate-y-1/2"></div>
+                <div class="absolute w-9 h-9 rounded-full bg-white border-4 border-slate-900 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center shadow-md">
+                  <div class="w-3 h-3 rounded-full bg-slate-900"></div>
+                </div>
               </div>
+              <span class="mt-4 text-[11px] font-black tracking-widest text-amber-300 uppercase">POKÉMON TCG</span>
             </div>
-            <span class="mt-4 text-xs font-black tracking-widest text-indigo-300/80 uppercase">POKÉMON TCG</span>
           </div>
 
-          <!-- Card Front Face -->
-          <div class="absolute inset-0 backface-hidden rotate-y-180 rounded-2xl ${rarityClass.bg} border-2 ${rarityClass.border} p-3.5 flex flex-col justify-between overflow-hidden ${rarityClass.glow}">
-            <!-- Header: Name & HP -->
-            <div class="flex items-center justify-between z-10">
-              <div>
-                <span class="text-[9px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded ${rarityClass.tagBg} ${rarityClass.tagText}">
-                  ${rarityClass.label}
-                </span>
-                <h4 class="text-white font-extrabold text-sm drop-shadow mt-0.5">${card.name}</h4>
-              </div>
-              <div class="flex items-center gap-1">
-                <span class="text-[10px] font-bold text-slate-300">HP</span>
-                <span class="text-amber-300 font-black text-sm">${card.hp}</span>
-              </div>
-            </div>
+          <!-- Card Front Face: Real Official TCG Card Art Scan -->
+          <div class="absolute inset-0 backface-hidden rotate-y-180 rounded-2xl overflow-hidden shadow-2xl">
+            <img src="${card.imageLarge}" 
+                 loading="lazy" 
+                 class="w-full h-full object-cover rounded-2xl filter drop-shadow-md" />
 
-            <!-- Artwork -->
-            <div class="relative w-full h-44 rounded-xl bg-black/30 border border-white/10 flex items-center justify-center p-2 my-1 overflow-hidden shadow-inner ${card.rarity === 'mythic' ? 'holo-shimmer' : ''}">
-              <img src="${getPokemonImage(card.id)}" class="w-full h-full object-contain filter drop-shadow-[0_8px_8px_rgba(0,0,0,0.7)]" />
-              <span class="absolute bottom-1 right-2 text-[10px] font-bold text-white/50 uppercase tracking-wider">#${card.id}</span>
-            </div>
+            <!-- Holographic Foil Overlay -->
+            <div class="holo-card-overlay ${card.rarity === 'mythic' ? 'holo-mythic' : card.rarity === 'legendary' ? 'holo-legendary' : ''}"></div>
+            
+            <!-- Mouse/Touch Glare Light -->
+            <div class="card-glare" id="glare-${idx}"></div>
 
-            <!-- Moves & Stats -->
-            <div class="space-y-1.5 z-10">
-              <div class="p-1.5 rounded-lg bg-black/40 border border-white/5 flex items-center justify-between text-xs">
-                <span class="text-slate-300 font-bold text-[11px]">${card.moves[0].name}</span>
-                <span class="text-amber-400 font-black">${card.moves[0].power}</span>
-              </div>
-              <div class="p-1.5 rounded-lg bg-black/50 border border-amber-500/20 flex items-center justify-between text-xs">
-                <span class="text-amber-300 font-black text-[11px]">${card.moves[1].name}</span>
-                <span class="text-rose-400 font-black">${card.moves[1].power}</span>
-              </div>
-            </div>
-
-            <!-- Footer: Stats bar -->
-            <div class="flex items-center justify-between text-[10px] font-bold text-slate-400 pt-1 border-t border-white/10 z-10">
-              <span>ATK: <b class="text-white">${card.atk}</b></span>
-              <span>DEF: <b class="text-white">${card.def}</b></span>
-              <span>SPD: <b class="text-white">${card.spd}</b></span>
+            <!-- Rarity Badge Top Right -->
+            <div class="absolute top-2 right-2 px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-black/75 text-amber-300 border border-amber-400/50 shadow">
+              ${card.rarityLabel || card.rarity}
             </div>
           </div>
 
@@ -244,13 +222,53 @@ class GachaSystem {
     `;
   }
 
-  // Flip single card
-  flipCard(idx) {
-    const cardInner = document.getElementById(`card-inner-${idx}`);
-    if (!cardInner || cardInner.dataset.flipped === "true") return;
+  // Interactive 3D Card Hover / Touch Tilt
+  attachTiltPhysics(idx) {
+    const cardEl = document.getElementById(`tcg-reveal-card-${idx}`);
+    const innerEl = document.getElementById(`tcg-card-inner-${idx}`);
+    const glareEl = document.getElementById(`glare-${idx}`);
+    if (!cardEl || !innerEl) return;
 
-    cardInner.style.transform = "rotateY(180deg)";
-    cardInner.dataset.flipped = "true";
+    const handleMove = (clientX, clientY) => {
+      if (innerEl.dataset.flipped !== "true") return;
+      const rect = cardEl.getBoundingClientRect();
+      const x = clientX - rect.left;
+      const y = clientY - rect.top;
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
+
+      const rotateX = ((y - centerY) / centerY) * -16;
+      const rotateY = ((x - centerX) / centerX) * 16 + 180; // +180 because it's flipped
+
+      innerEl.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.04)`;
+
+      if (glareEl) {
+        glareEl.style.setProperty("--mouse-x", `${(x / rect.width) * 100}%`);
+        glareEl.style.setProperty("--mouse-y", `${(y / rect.height) * 100}%`);
+      }
+    };
+
+    const handleReset = () => {
+      if (innerEl.dataset.flipped === "true") {
+        innerEl.style.transform = "rotateY(180deg) scale(1)";
+      }
+    };
+
+    cardEl.addEventListener("mousemove", (e) => handleMove(e.clientX, e.clientY));
+    cardEl.addEventListener("mouseleave", handleReset);
+    cardEl.addEventListener("touchmove", (e) => {
+      if (e.touches[0]) handleMove(e.touches[0].clientX, e.touches[0].clientY);
+    });
+    cardEl.addEventListener("touchend", handleReset);
+  }
+
+  // Flip Single Card
+  flipCard(idx) {
+    const inner = document.getElementById(`tcg-card-inner-${idx}`);
+    if (!inner || inner.dataset.flipped === "true") return;
+
+    inner.style.transform = "rotateY(180deg)";
+    inner.dataset.flipped = "true";
 
     const card = this.openedCards[idx];
     soundEngine.playCardFlip(card.rarity);
@@ -272,7 +290,7 @@ class GachaSystem {
     this.openedCards.forEach((_, idx) => {
       setTimeout(() => {
         this.flipCard(idx);
-      }, idx * 120);
+      }, idx * 140);
     });
   }
 
@@ -288,7 +306,7 @@ class GachaSystem {
     }
   }
 
-  // Finish opening, save cards to binder, close modal
+  // Collect All cards to player collection
   finishOpening() {
     this.openedCards.forEach((c) => {
       this.app.addCardToCollection(c);
@@ -302,57 +320,7 @@ class GachaSystem {
     if (modal) modal.classList.add("hidden");
 
     this.isOpening = false;
-    this.app.showToast(`Thu thập thành công ${this.openedCards.length} thẻ Pokémon mới! 🎉`, "success");
+    this.app.showToast(`Thu thập thành công ${this.openedCards.length} thẻ Pokémon TCG mới! 🎉`, "success");
     soundEngine.playTap();
-  }
-
-  getRarityStyles(rarity) {
-    switch (rarity) {
-      case "mythic":
-        return {
-          label: "✨ Thần Thoại (Mythic)",
-          bg: "bg-gradient-to-b from-amber-900/90 via-slate-900 to-purple-950",
-          border: "border-amber-400",
-          glow: "glow-mythic",
-          tagBg: "bg-amber-400 text-slate-950",
-          tagText: "text-slate-950"
-        };
-      case "legendary":
-        return {
-          label: "👑 Huyền Thoại",
-          bg: "bg-gradient-to-b from-purple-900/90 via-slate-900 to-indigo-950",
-          border: "border-purple-400",
-          glow: "glow-legendary",
-          tagBg: "bg-purple-500 text-white",
-          tagText: "text-white"
-        };
-      case "epic":
-        return {
-          label: "🔥 Sử Thi (Epic)",
-          bg: "bg-gradient-to-b from-indigo-900/90 via-slate-900 to-slate-950",
-          border: "border-indigo-400/80",
-          glow: "",
-          tagBg: "bg-indigo-600 text-white",
-          tagText: "text-white"
-        };
-      case "rare":
-        return {
-          label: "💎 Quý Hiếm (Rare)",
-          bg: "bg-gradient-to-b from-blue-900/80 via-slate-900 to-slate-950",
-          border: "border-blue-400/60",
-          glow: "",
-          tagBg: "bg-blue-600 text-white",
-          tagText: "text-white"
-        };
-      default:
-        return {
-          label: "⚪ Thường (Common)",
-          bg: "bg-gradient-to-b from-slate-800 via-slate-900 to-slate-950",
-          border: "border-slate-700",
-          glow: "",
-          tagBg: "bg-slate-700 text-slate-300",
-          tagText: "text-slate-300"
-        };
-    }
   }
 }

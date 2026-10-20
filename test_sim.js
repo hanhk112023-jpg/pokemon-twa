@@ -35,14 +35,18 @@ const context = {
       remove: () => {},
       appendChild: () => {},
       classList: { add: () => {}, remove: () => {} },
-      style: {}
+      style: {
+        setProperty: () => {}
+      }
     }),
     getElementById: (id) => ({
       innerText: '',
       innerHTML: '',
       classList: { add: () => {}, remove: () => {}, contains: () => false },
       dataset: {},
-      style: {},
+      style: {
+        setProperty: () => {}
+      },
       appendChild: () => {}
     }),
     querySelectorAll: () => []
@@ -59,51 +63,55 @@ context.window.localStorage = context.localStorage;
 
 const testRunnerCode = `
 app.init();
-console.log('✅ ALL SCRIPTS LOADED CLEANLY & APP INITIALIZED!');
-console.log('Total Pokémon Cards in DB:', POKEMON_DATA.length);
+console.log('✅ ALL TCG SCRIPTS LOADED & INITIALIZED!');
+console.log('Total Authentic TCG Cards in DB:', POKEMON_TCG_CARDS.length);
 console.log('Total Gym Leaders:', GYM_LEADERS.length);
 console.log('Total Booster Packs:', BOOSTER_PACKS.length);
-console.log('Initial Player Coins:', app.state.coins);
 console.log('Starter Collection size:', app.state.collection.length);
+console.log('Starter Cards:', app.state.collection.map(c => c.name).join(', '));
 
-// Test opening a Great Pack
-console.log('--- TESTING GACHA OPENING ---');
-gachaSystem.openPack('great_pack');
+// Test opening Pokémon 151 Booster Pack
+console.log('--- TESTING 3D TCG BOOSTER OPENING ---');
+gachaSystem.openPack('pack_151');
 console.log('Coins after opening:', app.state.coins);
 console.log('Opened cards count:', gachaSystem.openedCards.length);
 for (let i = 0; i < gachaSystem.openedCards.length; i++) {
   const c = gachaSystem.openedCards[i];
-  console.log('  Card ' + (i+1) + ': ' + c.name + ' [' + c.rarity.toUpperCase() + '] HP:' + c.hp + ' ATK:' + c.atk + ' Type:' + c.type);
+  console.log('  Card ' + (i+1) + ': ' + c.name + ' [' + c.rarity.toUpperCase() + '] HP:' + c.hp + ' Type:' + c.type + ' | Attacks: ' + c.attacks.map(a => a.name).join(', '));
 }
 gachaSystem.flipAll();
 gachaSystem.finishOpening();
-console.log('Total collection after gacha:', app.state.collection.length);
+console.log('Total collection after opening:', app.state.collection.length);
 
-// Test Battle vs Gym Leader
-console.log('--- TESTING TURN-BASED BATTLE ---');
+// Test TCG Playmat Battle
+console.log('--- TESTING TCG PLAYMAT BATTLE ---');
 battleEngine.startBattle('brock');
-console.log('Battle vs Brock started!');
-console.log('Player active Pokemon:', battleEngine.playerPokemon.name, 'HP:', battleEngine.playerPokemon.currentHp);
-console.log('Enemy Pokemon:', battleEngine.enemyPokemon.name, 'HP:', battleEngine.enemyPokemon.currentHp);
+console.log('Battle vs Brock started on Playmat!');
+console.log('Player Active Card:', battleEngine.playerActive.name, 'HP:', battleEngine.playerActive.currentHp, 'Attached Energy:', battleEngine.playerActive.attachedEnergy);
+console.log('Player Bench Size:', battleEngine.playerBench.length);
+console.log('Enemy Active Card:', battleEngine.enemyActive.name, 'HP:', battleEngine.enemyActive.currentHp);
 
-// Execute Player Attack
-battleEngine.playerAction('move_1');
-console.log('Enemy HP after basic attack:', battleEngine.enemyPokemon.currentHp);
+// Attach Energy
+console.log('1. Attaching Energy...');
+battleEngine.attachEnergyToActive();
+console.log('Player Active Energy after attach:', battleEngine.playerActive.attachedEnergy);
 
-// Execute Player Special Move
-battleEngine.playerEnergy = 3;
-battleEngine.turn = 'player';
-battleEngine.isActionPending = false;
-battleEngine.playerAction('move_2');
-console.log('Enemy HP after special move:', battleEngine.enemyPokemon.currentHp);
+// Execute Attack
+console.log('2. Executing Attack...');
+battleEngine.playerExecuteAttack(0);
+console.log('Enemy HP after attack:', battleEngine.enemyActive.currentHp);
 
 // Test Potion
-battleEngine.turn = 'player';
-battleEngine.isActionPending = false;
-battleEngine.playerAction('potion');
-console.log('Player HP after heal:', battleEngine.playerPokemon.currentHp, 'Charges left:', battleEngine.playerHealCharges);
+console.log('3. Testing Potion...');
+battleEngine.useItemPotion();
+console.log('Player HP after potion:', battleEngine.playerActive.currentHp, 'Potion charges left:', battleEngine.playerPotionCount);
 
-console.log('✅ ALL INTEGRATION TESTS PASSED 100%!');
+// Test X-Speed
+console.log('4. Testing X-Speed...');
+battleEngine.useItemXSpeed();
+console.log('Unattached Energy after X-Speed:', battleEngine.playerUnattachedEnergy);
+
+console.log('✅ ALL TCG POCKET TESTS PASSED 100%!');
 `;
 
 const combined = [

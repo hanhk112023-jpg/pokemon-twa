@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <title>Pokémon Card Battle TWA</title>
+  <title>Pokémon TCG Pocket — Telegram Mini App</title>
 
   <!-- Telegram WebApp SDK -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -28,22 +28,22 @@
     }
   </script>
 
-  <!-- Custom CSS for 3D Foils & Shimmer -->
+  <!-- Custom CSS for 3D Foils, Gyro Tilt & Playmat -->
   <link rel="stylesheet" href="css/style.css" />
 </head>
-<body class="bg-[#090D16] text-slate-100 font-sans select-none antialiased min-h-screen pb-24 overflow-x-hidden">
+<body class="bg-[#070b14] text-slate-100 font-sans select-none antialiased min-h-screen pb-24 overflow-x-hidden">
 
   <!-- TOP HEADER BAR: Coins & Total Cards -->
-  <header class="sticky top-0 z-40 bg-[#090D16]/90 backdrop-blur-md border-b border-white/10 px-4 py-3 safe-top flex items-center justify-between">
-    <div class="flex items-center gap-2">
-      <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-amber-500 to-rose-500 p-0.5 shadow-md">
+  <header class="sticky top-0 z-40 bg-[#070b14]/90 backdrop-blur-md border-b border-white/10 px-4 py-3 safe-top flex items-center justify-between">
+    <div class="flex items-center gap-2.5">
+      <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-amber-500 via-rose-500 to-purple-600 p-0.5 shadow-md">
         <div class="w-full h-full rounded-full bg-slate-950 flex items-center justify-center">
-          <span class="text-sm">⚡</span>
+          <span class="text-sm">🎴</span>
         </div>
       </div>
       <div>
-        <h1 class="text-xs font-black uppercase tracking-wider text-white">Pokémon TWA</h1>
-        <p class="text-[10px] text-slate-400 font-medium">Chiến Đấu & Mở Thẻ</p>
+        <h1 class="text-xs font-black uppercase tracking-wider text-white">Pokémon TCG Pocket</h1>
+        <p class="text-[10px] text-amber-400 font-semibold">Bản Quyền Thẻ Bài Thật</p>
       </div>
     </div>
 
@@ -52,7 +52,7 @@
       <!-- Collection Count -->
       <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-slate-900 border border-white/10 text-xs font-bold shadow-inner">
         <span>🃏</span>
-        <span id="header-cards-count" class="text-indigo-400 font-black">0</span>
+        <span id="header-cards-count" class="text-indigo-400 font-black font-mono">0</span>
       </div>
 
       <!-- Coins Balance -->
@@ -93,9 +93,9 @@
       <!-- Section Title -->
       <div class="flex items-center justify-between pt-1">
         <h3 class="text-xs font-black uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
-          <span>📦 Các Gói Thẻ Booster Pack</span>
+          <span>📦 Các Gói Thẻ Booster Pack TCG</span>
         </h3>
-        <span class="text-[10px] text-slate-500 font-medium">Bản quyền TCG</span>
+        <span class="text-[10px] text-amber-400 font-bold">5 Thẻ / Gói</span>
       </div>
 
       <!-- Packs List -->
@@ -123,7 +123,7 @@
           <h3 class="text-xs font-black uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
             <span>🏟️ Khiêu Chiến Thủ Lĩnh Nhà Thi Đấu</span>
           </h3>
-          <span class="text-[10px] text-slate-500 font-medium">Kiếm Xu & EXP</span>
+          <span class="text-[10px] text-slate-500 font-medium">3 Điểm Thắng</span>
         </div>
         
         <div id="gym-leaders-list" class="space-y-2.5">
@@ -133,23 +133,23 @@
     </section>
 
     <!-- ============================================== -->
-    <!-- TAB 3: BATTLE ARENA (Giao Diện Chiến Đấu Đang Chạy) -->
+    <!-- TAB 3: BATTLE ARENA (Giao Diện Playmat Sàn Đấu TCG) -->
     <!-- ============================================== -->
     <section id="view-battle" class="tab-view hidden space-y-3">
       <div class="flex items-center justify-between pb-1">
         <button onclick="app.switchTab('arena-list')" class="px-2.5 py-1 rounded-xl bg-slate-900 border border-white/10 text-xs font-bold text-slate-300 flex items-center gap-1">
-          <span>← Thoát Trận</span>
+          <span>← Rút Lui Khỏi Trận</span>
         </button>
-        <span class="text-xs font-black uppercase tracking-wider text-amber-400">Đấu Trường Kanto</span>
+        <span class="text-xs font-black uppercase tracking-wider text-amber-400">Sàn Đấu Playmat TCG</span>
       </div>
 
       <div id="battle-screen-container">
-        <!-- Injected via battleEngine.renderBattleArena() -->
+        <!-- Injected via battleEngine.renderPlaymatArena() -->
       </div>
     </section>
 
     <!-- ============================================== -->
-    <!-- TAB 4: COLLECTION BINDER (Bộ Sưu Tập Thẻ Bài) -->
+    <!-- TAB 4: COLLECTION BINDER (Album Thẻ Bài) -->
     <!-- ============================================== -->
     <section id="view-collection" class="tab-view hidden space-y-3">
       
@@ -157,10 +157,10 @@
       <div class="space-y-2">
         <div class="flex items-center justify-between">
           <h3 class="text-xs font-black uppercase tracking-wider text-slate-400">
-            Album Thẻ Bài Pokémon Sở Hữu
+            Album Thẻ Bài Pokémon TCG Sở Hữu
           </h3>
-          <button onclick="gachaSystem.openPack('poke_pack')" class="text-xs text-amber-400 font-bold hover:underline">
-            + Mở Thêm
+          <button onclick="app.switchTab('gacha')" class="text-xs text-amber-400 font-bold hover:underline">
+            + Mở Thêm Thẻ
           </button>
         </div>
 
@@ -172,27 +172,26 @@
             <option value="fire">Hệ Lửa (Fire)</option>
             <option value="water">Hệ Nước (Water)</option>
             <option value="grass">Hệ Cỏ (Grass)</option>
-            <option value="electric">Hệ Điện (Electric)</option>
+            <option value="lightning">Hệ Điện (Lightning)</option>
             <option value="psychic">Hệ Tâm Linh (Psychic)</option>
-            <option value="dragon">Hệ Rồng (Dragon)</option>
-            <option value="ghost">Hệ Ma (Ghost)</option>
             <option value="fighting">Hệ Giác Đấu (Fighting)</option>
-            <option value="normal">Hệ Thường (Normal)</option>
+            <option value="dragon">Hệ Rồng (Dragon)</option>
+            <option value="colorless">Hệ Vô Sắc (Colorless)</option>
           </select>
 
           <select id="filter-rarity" onchange="app.currentFilterRarity = this.value; app.renderCollection()"
                   class="bg-slate-900 border border-white/10 text-xs text-slate-200 rounded-xl px-3 py-2 font-bold focus:outline-none focus:border-amber-400">
             <option value="all">💎 Mọi Phẩm Cấp</option>
-            <option value="mythic">✨ Thần Thoại (Mythic)</option>
-            <option value="legendary">👑 Huyền Thoại (Legendary)</option>
-            <option value="epic">🔥 Sử Thi (Epic)</option>
-            <option value="rare">💎 Quý Hiếm (Rare)</option>
+            <option value="mythic">✨ Thần Thoại (Illustration Rare)</option>
+            <option value="legendary">👑 Huyền Thoại (Double Rare EX)</option>
+            <option value="epic">🔥 Sử Thi (Rare Holo)</option>
+            <option value="rare">💎 Quý Hiếm (Uncommon)</option>
             <option value="common">⚪ Thường (Common)</option>
           </select>
         </div>
       </div>
 
-      <!-- Collection Cards Grid -->
+      <!-- Collection Cards Grid (3 Columns) -->
       <div id="collection-grid" class="grid grid-cols-3 gap-2.5 pt-1">
         <!-- Injected via app.renderCollection() -->
       </div>
@@ -208,7 +207,7 @@
         <div class="flex items-center gap-3.5">
           <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-indigo-500 to-amber-500 p-0.5 shadow-lg">
             <img id="profile-avatar" 
-                 src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png" 
+                 src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/trainers/red.png" 
                  class="w-full h-full rounded-2xl object-cover bg-slate-900 p-1" />
           </div>
           <div class="flex-1 min-w-0">
@@ -216,7 +215,7 @@
             <p id="profile-username" class="text-xs text-indigo-300 font-mono truncate">@trainer • ID: 12345</p>
             <div class="mt-1.5 flex items-center gap-2">
               <span class="text-[9px] px-2 py-0.5 rounded-full bg-amber-400 text-slate-950 font-black uppercase tracking-wider">
-                Rank: Đấu Sĩ Tinh Anh
+                Rank: Đấu Sĩ Tinh Anh TCG
               </span>
             </div>
           </div>
@@ -254,11 +253,11 @@
       <!-- Action Buttons: Share & Sound Toggle -->
       <div class="grid grid-cols-2 gap-2 pt-2">
         <button onclick="app.shareToTelegram()" 
-                class="py-3 px-4 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-black text-xs uppercase tracking-wider shadow-lg flex items-center justify-center gap-2 active:scale-95 transition-all">
+                class="py-3 px-4 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-black text-xs uppercase tracking-wider shadow-lg flex items-center justify-center gap-2 active:scale-95 transition-all">
           <span>📢 Khoe Thẻ Lên Chat</span>
         </button>
         <button onclick="soundEngine.enabled = !soundEngine.enabled; app.showToast(soundEngine.enabled ? 'Đã bật âm thanh 8-bit 🔊' : 'Đã tắt âm thanh 🔇'); soundEngine.playTap();" 
-                class="py-3 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 active:scale-95 transition-all">
+                class="py-3 px-4 rounded-2xl bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 active:scale-95 transition-all">
           <span>🔊 Bật/Tắt Âm Thanh</span>
         </button>
       </div>
@@ -302,7 +301,7 @@
   <!-- ============================================== -->
   <!-- BOTTOM NAVIGATION BAR (Telegram Style Tabs) -->
   <!-- ============================================== -->
-  <nav class="fixed bottom-0 inset-x-0 z-40 bg-[#090D16]/95 backdrop-blur-lg border-t border-white/10 px-4 py-2 safe-bottom">
+  <nav class="fixed bottom-0 inset-x-0 z-40 bg-[#070b14]/95 backdrop-blur-lg border-t border-white/10 px-4 py-2 safe-bottom">
     <div class="max-w-md mx-auto flex items-center justify-around">
       
       <!-- Tab 1: Gacha Shop -->

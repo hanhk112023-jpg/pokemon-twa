@@ -1,413 +1,569 @@
 /**
- * Turn-Based Combat Engine & Damage Calculator
+ * Pokémon TCG Pocket Battle Engine
+ * Playmat Rules: Active Spot, Bench Slots, Energy Attachment, Prize Points (3 to Win)
  */
 
 class BattleEngine {
   constructor(app) {
     this.app = app;
     this.inBattle = false;
-    this.playerPokemon = null;
-    this.enemyPokemon = null;
-    this.currentLeader = null;
     this.turn = "player"; // "player" | "enemy"
+    this.turnCount = 1;
     this.isActionPending = false;
-    this.playerShield = false;
-    this.enemyShield = false;
-    this.playerHealCharges = 2;
-    this.playerEnergy = 1; // max 3
+
+    // Player Board State
+    this.playerActive = null;
+    this.playerBench = [];
+    this.playerPrizePoints = 0; // 3 to win
+    this.playerUnattachedEnergy = 0;
+    this.playerPotionCount = 2;
+    this.playerXSpeedCount = 1;
+
+    // Enemy Board State
+    this.enemyActive = null;
+    this.enemyBench = [];
+    this.enemyPrizePoints = 0; // 3 to win
+    this.enemyUnattachedEnergy = 0;
+    this.currentLeader = null;
   }
 
-  // Calculate Elemental Multiplier
-  getTypeMultiplier(attackType, targetType) {
-    if (!attackType || !targetType) return 1.0;
-    const mapping = TYPE_CHART[attackType.toLowerCase()];
+  // Type Chart Multiplier
+  getTypeMultiplier(atkType, defType) {
+    if (!atkType || !defType) return 1.0;
+    const mapping = TYPE_CHART[atkType.toLowerCase()];
     if (!mapping) return 1.0;
-    return mapping[targetType.toLowerCase()] !== undefined ? mapping[targetType.toLowerCase()] : 1.0;
+    return mapping[defType.toLowerCase()] !== undefined ? mapping[defType.toLowerCase()] : 1.0;
   }
 
-  // Calculate Final Damage
-  calculateDamage(attacker, defender, move, isShielded) {
-    const basePower = move.power;
-    const atkStat = attacker.atk;
-    const defStat = defender.def;
-
-    // Type effectiveness
-    const typeMult = this.getTypeMultiplier(move.type, defender.type);
-
-    // Critical hit chance (10% normal, 35% if move has crit_chance effect)
-    const critRate = move.effect === "crit_chance" ? 0.35 : 0.10;
-    const isCrit = Math.random() < critRate;
-    const critMult = isCrit ? 1.5 : 1.0;
-
-    // Defense mitigation formula
-    let rawDamage = ((2 * 50 / 5 + 2) * basePower * (atkStat / Math.max(20, defStat)) / 50 + 2);
-    rawDamage *= typeMult * critMult;
-
-    // Variance (+/- 10%)
-    const variance = (Math.random() * 0.2) + 0.9;
-    let finalDamage = Math.floor(rawDamage * variance);
-
-    // Shield reduction
-    if (isShielded) {
-      finalDamage = Math.max(10, Math.floor(finalDamage * 0.5));
-    }
-
+  // Helper to clone a card for combat
+  cloneCardForBattle(card) {
     return {
-      damage: Math.max(15, finalDamage),
-      isCrit,
-      typeMult
+      ...card,
+      currentHp: card.hp,
+      maxHp: card.hp,
+      attachedEnergy: 0,
+      status: "normal"
     };
   }
 
-  // Start a new Battle against a Gym Leader / Wild Opponent
+  // Start Battle vs Gym Leader
   startBattle(leaderId) {
     const leader = GYM_LEADERS.find((l) => l.id === leaderId) || GYM_LEADERS[0];
     this.currentLeader = leader;
 
-    // Get active player Pokemon
-    const activeId = this.app.state.activePokemonInstanceId;
-    let p = this.app.state.collection.find((c) => c.instanceId === activeId);
-    if (!p) {
-      p = this.app.state.collection[0];
-    }
-
-    if (!p) {
-      this.app.showToast("Bạn chưa có thẻ Pokémon nào! Hãy mở thẻ trước.", "error");
+    if (this.app.state.collection.length === 0) {
+      this.app.showToast("Bạn chưa có thẻ bài nào! Hãy mở gói thẻ trước.", "error");
       return;
     }
 
-    // Clone player state for battle
-    this.playerPokemon = {
-      ...p,
-      currentHp: p.hp,
-      maxHp: p.hp
-    };
+    // Select Player Active Card
+    let activeCard = this.app.state.collection.find((c) => c.instanceId === this.app.state.activePokemonInstanceId);
+    if (!activeCard) activeCard = this.app.state.collection[0];
+    this.playerActive = this.cloneCardForBattle(activeCard);
 
-    // Instantiate enemy
-    let enemyBase = POKEMON_DATA.find((item) => item.id === leader.pokemon);
-    if (!enemyBase) {
-      enemyBase = POKEMON_DATA[Math.floor(Math.random() * POKEMON_DATA.length)];
+    // Select Player Bench (take up to 2 other cards from collection)
+    this.playerBench = [];
+    for (const c of this.app.state.collection) {
+      if (c.instanceId !== activeCard.instanceId && this.playerBench.length < 2) {
+        this.playerBench.push(this.cloneCardForBattle(c));
+      }
     }
 
-    // Scale enemy stats with leader difficulty
+    // Setup Enemy Deck from Leader
+    let enemyBase = POKEMON_TCG_CARDS.find((c) => c.id === leader.deckCardId);
+    if (!enemyBase) enemyBase = POKEMON_TCG_CARDS[0];
+
+    // Scale enemy HP slightly with difficulty
     let hpScale = 1.0;
-    let atkScale = 1.0;
-    if (leader.difficulty === "Trung Bình") { hpScale = 1.1; atkScale = 1.1; }
-    if (leader.difficulty === "Khó") { hpScale = 1.25; atkScale = 1.2; }
-    if (leader.difficulty === "Cực Khó") { hpScale = 1.45; atkScale = 1.35; }
-    if (leader.difficulty === "Huyền Thoại") { hpScale = 1.8; atkScale = 1.5; }
+    if (leader.difficulty === "Trung Bình") hpScale = 1.15;
+    if (leader.difficulty === "Khó") hpScale = 1.30;
+    if (leader.difficulty === "Cực Khó") hpScale = 1.50;
+    if (leader.difficulty === "Huyền Thoại") hpScale = 1.85;
 
-    this.enemyPokemon = {
+    this.enemyActive = {
       ...enemyBase,
-      hp: Math.floor(enemyBase.hp * hpScale),
-      maxHp: Math.floor(enemyBase.hp * hpScale),
       currentHp: Math.floor(enemyBase.hp * hpScale),
-      atk: Math.floor(enemyBase.atk * atkScale)
+      maxHp: Math.floor(enemyBase.hp * hpScale),
+      attachedEnergy: 0
     };
 
-    // Reset battle state
-    this.inBattle = true;
-    this.turn = this.playerPokemon.spd >= this.enemyPokemon.spd ? "player" : "enemy";
-    this.isActionPending = false;
-    this.playerShield = false;
-    this.enemyShield = false;
-    this.playerHealCharges = 2;
-    this.playerEnergy = 1;
-
-    // Switch to Battle Arena View
-    this.app.switchTab("battle");
-    this.renderBattleArena();
-
-    this.logAction(`⚔️ Trận đấu bắt đầu! ${leader.name} thách đấu với ${this.enemyPokemon.name}!`);
-
-    // If enemy is faster, enemy attacks first
-    if (this.turn === "enemy") {
-      this.logAction(`⚡ Đối thủ có tốc độ (${this.enemyPokemon.spd}) nhanh hơn và ra đòn trước!`);
-      setTimeout(() => this.executeEnemyTurn(), 1200);
-    } else {
-      this.logAction(`🌟 Pokémon của bạn (${this.playerPokemon.name}) chiếm thế thượng phong ra đòn trước!`);
+    // Enemy Bench (1-2 support cards)
+    this.enemyBench = [];
+    const pool = POKEMON_TCG_CARDS.filter((c) => c.id !== enemyBase.id);
+    if (pool.length > 0) {
+      this.enemyBench.push(this.cloneCardForBattle(pool[Math.floor(Math.random() * pool.length)]));
+      this.enemyBench.push(this.cloneCardForBattle(pool[Math.floor(Math.random() * pool.length)]));
     }
+
+    // Reset Match Variables
+    this.inBattle = true;
+    this.turn = "player";
+    this.turnCount = 1;
+    this.isActionPending = false;
+    this.playerPrizePoints = 0;
+    this.enemyPrizePoints = 0;
+    this.playerUnattachedEnergy = 1; // start with 1 energy
+    this.enemyUnattachedEnergy = 0;
+    this.playerPotionCount = 2;
+    this.playerXSpeedCount = 1;
+
+    this.app.switchTab("battle");
+    this.renderPlaymatArena();
+
+    this.logAction(`⚔️ Trận đấu TCG bắt đầu! ${leader.name} (${leader.gym}) thách đấu bạn!`);
   }
 
-  // Render the Battle Arena UI
-  renderBattleArena() {
+  // Render Full TCG Pocket Playmat
+  renderPlaymatArena() {
     const container = document.getElementById("battle-screen-container");
     if (!container) return;
 
     container.innerHTML = `
-      <div id="battle-arena" class="relative w-full rounded-3xl bg-gradient-to-b from-slate-900 via-indigo-950 to-slate-950 border border-slate-800 p-4 shadow-2xl overflow-hidden flex flex-col justify-between min-h-[490px]">
+      <div id="playmat-arena" class="playmat-container rounded-3xl p-3 flex flex-col justify-between min-h-[580px] select-none text-slate-100">
         
-        <!-- Arena Backdrop Glow -->
-        <div class="absolute -top-20 -left-20 w-60 h-60 rounded-full bg-indigo-500/10 blur-3xl pointer-events-none"></div>
-        <div class="absolute -bottom-20 -right-20 w-60 h-60 rounded-full bg-amber-500/10 blur-3xl pointer-events-none"></div>
-
-        <!-- TOP: Enemy Zone -->
-        <div class="relative z-10 flex items-start justify-between">
-          <!-- Enemy Health & Info Bar -->
-          <div class="bg-black/40 backdrop-blur-md rounded-2xl border border-white/10 p-3 shadow-lg w-52">
-            <div class="flex items-center justify-between mb-1.5">
-              <span class="text-white font-extrabold text-xs drop-shadow truncate max-w-[110px]">
-                ${this.enemyPokemon.name}
-              </span>
-              <span class="text-[10px] font-bold px-1.5 py-0.5 rounded uppercase bg-rose-500/30 text-rose-300 border border-rose-500/40">
-                ${this.enemyPokemon.type}
-              </span>
-            </div>
-            <!-- HP Bar -->
-            <div class="w-full bg-slate-800 rounded-full h-2.5 overflow-hidden border border-white/10">
-              <div id="enemy-hp-bar" class="h-full bg-gradient-to-r from-emerald-500 to-green-400 transition-all duration-500 rounded-full" 
-                   style="width: 100%;"></div>
-            </div>
-            <div class="flex items-center justify-between mt-1 text-[10px] font-bold text-slate-400">
-              <span>HP</span>
-              <span id="enemy-hp-text" class="text-white font-mono">${this.enemyPokemon.currentHp}/${this.enemyPokemon.maxHp}</span>
-            </div>
-          </div>
-
-          <!-- Enemy Avatar / Sprite -->
-          <div id="enemy-sprite-box" class="relative w-32 h-32 flex items-center justify-center">
-            <img id="enemy-sprite" 
-                 src="${getPokemonImage(this.enemyPokemon.id)}" 
-                 class="w-full h-full object-contain filter drop-shadow-[0_12px_12px_rgba(0,0,0,0.8)] transition-transform duration-300" />
-            <div id="enemy-damage-float" class="absolute top-2 left-1/2 -translate-x-1/2 pointer-events-none"></div>
-          </div>
-        </div>
-
-        <!-- Turn & Status Notice Bar -->
-        <div class="relative z-10 text-center my-auto">
-          <div id="turn-badge" class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 shadow-inner">
-            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
-            <span id="turn-badge-text">Lượt của bạn</span>
-          </div>
-          <!-- Log ticker -->
-          <div id="battle-log" class="text-[11px] text-slate-300 font-medium h-5 mt-2 transition-all truncate px-4">
-            Đang chờ lệnh tấn công...
-          </div>
-        </div>
-
-        <!-- BOTTOM: Player Zone -->
-        <div class="relative z-10 flex items-end justify-between">
-          <!-- Player Avatar / Sprite -->
-          <div id="player-sprite-box" class="relative w-32 h-32 flex items-center justify-center">
-            <img id="player-sprite" 
-                 src="${getPokemonImage(this.playerPokemon.id)}" 
-                 class="w-full h-full object-contain filter drop-shadow-[0_12px_12px_rgba(0,0,0,0.8)] transition-transform duration-300" />
-            <div id="player-damage-float" class="absolute top-2 left-1/2 -translate-x-1/2 pointer-events-none"></div>
-          </div>
-
-          <!-- Player Health & Info Bar -->
-          <div class="bg-black/40 backdrop-blur-md rounded-2xl border border-white/10 p-3 shadow-lg w-52">
-            <div class="flex items-center justify-between mb-1.5">
-              <span class="text-white font-extrabold text-xs drop-shadow truncate max-w-[110px]">
-                ${this.playerPokemon.name}
-              </span>
-              <span class="text-[10px] font-bold px-1.5 py-0.5 rounded uppercase bg-indigo-500/30 text-indigo-300 border border-indigo-500/40">
-                ${this.playerPokemon.type}
-              </span>
-            </div>
-            <!-- HP Bar -->
-            <div class="w-full bg-slate-800 rounded-full h-2.5 overflow-hidden border border-white/10">
-              <div id="player-hp-bar" class="h-full bg-gradient-to-r from-emerald-500 to-green-400 transition-all duration-500 rounded-full" 
-                   style="width: 100%;"></div>
-            </div>
-            <div class="flex items-center justify-between mt-1 text-[10px] font-bold text-slate-400">
-              <div class="flex items-center gap-1">
-                <span>Năng lượng:</span>
-                <span id="player-energy-dots" class="flex gap-1 text-amber-400 text-xs">⚡</span>
+        <!-- ================= OPPONENT ZONE (TOP) ================= -->
+        <div class="space-y-2">
+          <!-- Opponent Bar: Name, Avatar, Prize Points -->
+          <div class="flex items-center justify-between px-2">
+            <div class="flex items-center gap-2">
+              <img src="${this.currentLeader.avatar}" class="w-8 h-8 rounded-full bg-black/40 border border-white/20 p-0.5" />
+              <div>
+                <span class="text-xs font-black text-white block leading-tight">${this.currentLeader.name}</span>
+                <span class="text-[10px] text-slate-400">${this.currentLeader.gym}</span>
               </div>
-              <span id="player-hp-text" class="text-white font-mono">${this.playerPokemon.currentHp}/${this.playerPokemon.maxHp}</span>
+            </div>
+
+            <!-- Enemy Prize Points Badges (Need 3 to win) -->
+            <div class="flex items-center gap-1.5 bg-black/50 px-2.5 py-1 rounded-xl border border-white/10">
+              <span class="text-[10px] text-slate-400 uppercase font-black">Điểm Thắng:</span>
+              <span id="enemy-prize-points" class="text-xs font-black text-rose-400 font-mono tracking-wider">
+                ${"⭐".repeat(this.enemyPrizePoints)}${"⚪".repeat(3 - this.enemyPrizePoints)}
+              </span>
+            </div>
+          </div>
+
+          <!-- Opponent Bench & Active Spot -->
+          <div class="flex items-center justify-around gap-2 pt-1">
+            <!-- Opponent Bench (Mini cards) -->
+            <div class="flex gap-1.5" id="enemy-bench-cards">
+              ${this.enemyBench.map((c, i) => `
+                <div class="bench-slot w-14 h-20 rounded-xl overflow-hidden shadow border border-white/10 opacity-80">
+                  <img src="${c.imageSmall}" class="w-full h-full object-cover" />
+                </div>
+              `).join("")}
+            </div>
+
+            <!-- Opponent Active Card (Main Centerpiece) -->
+            <div class="flex flex-col items-center">
+              <div id="enemy-active-wrapper" class="tcg-card-frame w-28 h-40 active-slot has-card relative shadow-2xl">
+                <img id="enemy-active-img" src="${this.enemyActive.imageLarge}" class="w-full h-full object-cover rounded-xl" />
+                <div id="enemy-damage-float" class="absolute top-2 left-1/2 -translate-x-1/2 pointer-events-none"></div>
+
+                <!-- Attached Energy Counter -->
+                <div class="absolute bottom-1 right-1 px-1.5 py-0.5 rounded-md bg-black/80 border border-amber-400/50 text-[10px] font-black text-amber-300 flex items-center gap-0.5 shadow">
+                  <span>⚡</span>
+                  <span id="enemy-attached-energy">${this.enemyActive.attachedEnergy}</span>
+                </div>
+              </div>
+
+              <!-- Enemy Active HP Bar -->
+              <div class="w-28 mt-1 text-center">
+                <div class="w-full bg-slate-900 rounded-full h-2 overflow-hidden border border-white/10">
+                  <div id="enemy-hp-bar" class="h-full bg-gradient-to-r from-emerald-500 to-green-400 rounded-full transition-all duration-300" style="width: 100%;"></div>
+                </div>
+                <span id="enemy-hp-text" class="text-[10px] font-mono text-slate-300 font-bold block mt-0.5">
+                  ${this.enemyActive.currentHp}/${this.enemyActive.maxHp} HP
+                </span>
+              </div>
             </div>
           </div>
         </div>
 
-        <!-- COMBAT ACTION CONTROLS -->
-        <div class="relative z-10 pt-3 border-t border-white/10 grid grid-cols-2 gap-2">
-          <!-- 1. Basic Attack -->
-          <button id="btn-move-1" onclick="battleEngine.playerAction('move_1')"
-                  class="p-2.5 rounded-xl bg-slate-800/90 hover:bg-slate-700/90 border border-slate-700 text-left active:scale-95 transition-all shadow-md flex flex-col justify-between">
-            <div class="flex items-center justify-between w-full">
-              <span class="text-white font-bold text-xs truncate">${this.playerPokemon.moves[0].name}</span>
-              <span class="text-amber-400 text-[10px] font-black">${this.playerPokemon.moves[0].power}</span>
+        <!-- ================= BATTLE TICKER & TURN BADGE (CENTER) ================= -->
+        <div class="my-auto text-center py-2 relative z-20">
+          <div id="turn-badge" class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-amber-500/20 text-amber-300 border border-amber-500/40 shadow-inner">
+            <span class="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
+            <span id="turn-badge-text">Lượt Của Bạn — Hãy Gắn Năng Lượng</span>
+          </div>
+          <div id="battle-log" class="text-[11px] text-slate-300 font-medium h-5 mt-1.5 truncate px-4">
+            Đang chờ bạn ra quyết định chiến thuật...
+          </div>
+        </div>
+
+        <!-- ================= PLAYER ZONE (BOTTOM) ================= -->
+        <div class="space-y-2">
+          <!-- Player Active Spot & Bench -->
+          <div class="flex items-center justify-around gap-2">
+            <!-- Player Active Card -->
+            <div class="flex flex-col items-center">
+              <div id="player-active-wrapper" class="tcg-card-frame w-28 h-40 active-slot has-card relative shadow-2xl">
+                <img id="player-active-img" src="${this.playerActive.imageLarge}" class="w-full h-full object-cover rounded-xl" />
+                <div id="player-damage-float" class="absolute top-2 left-1/2 -translate-x-1/2 pointer-events-none"></div>
+
+                <!-- Attached Energy Counter -->
+                <div class="absolute bottom-1 right-1 px-1.5 py-0.5 rounded-md bg-black/80 border border-amber-400/50 text-[10px] font-black text-amber-300 flex items-center gap-0.5 shadow">
+                  <span>⚡</span>
+                  <span id="player-attached-energy">${this.playerActive.attachedEnergy}</span>
+                </div>
+              </div>
+
+              <!-- Player Active HP Bar -->
+              <div class="w-28 mt-1 text-center">
+                <div class="w-full bg-slate-900 rounded-full h-2 overflow-hidden border border-white/10">
+                  <div id="player-hp-bar" class="h-full bg-gradient-to-r from-emerald-500 to-green-400 rounded-full transition-all duration-300" style="width: 100%;"></div>
+                </div>
+                <span id="player-hp-text" class="text-[10px] font-mono text-slate-300 font-bold block mt-0.5">
+                  ${this.playerActive.currentHp}/${this.playerActive.maxHp} HP
+                </span>
+              </div>
             </div>
-            <span class="text-[9px] text-slate-400 mt-1 uppercase font-semibold">Tấn công thường</span>
-          </button>
 
-          <!-- 2. Special Elemental Move (Requires Energy) -->
-          <button id="btn-move-2" onclick="battleEngine.playerAction('move_2')"
-                  class="p-2.5 rounded-xl bg-gradient-to-r from-indigo-900/80 to-purple-900/80 hover:from-indigo-800/80 hover:to-purple-800/80 border border-indigo-500/40 text-left active:scale-95 transition-all shadow-md flex flex-col justify-between">
-            <div class="flex items-center justify-between w-full">
-              <span class="text-amber-300 font-extrabold text-xs truncate">${this.playerPokemon.moves[1].name}</span>
-              <span class="text-rose-400 text-[10px] font-black">${this.playerPokemon.moves[1].power}</span>
+            <!-- Player Bench Slots -->
+            <div class="flex flex-col gap-1">
+              <span class="text-[9px] text-slate-400 uppercase font-black tracking-wider text-center">Ghế Dự Bị (Bench)</span>
+              <div class="flex gap-1.5" id="player-bench-cards">
+                ${this.playerBench.map((c, i) => `
+                  <div onclick="battleEngine.switchBenchWithActive(${i})" 
+                       class="bench-slot w-14 h-20 rounded-xl overflow-hidden shadow border border-indigo-400/40 relative cursor-pointer hover:scale-105 active:scale-95 transition-all group">
+                    <img src="${c.imageSmall}" class="w-full h-full object-cover" />
+                    <div class="absolute inset-0 bg-black/30 group-hover:bg-transparent transition-all"></div>
+                    <span class="absolute bottom-0.5 inset-x-0 text-center text-[8px] font-black bg-black/70 text-indigo-300 uppercase">
+                      Đổi ⇄
+                    </span>
+                  </div>
+                `).join("")}
+              </div>
             </div>
-            <span class="text-[9px] text-indigo-300 mt-1 uppercase font-bold flex items-center gap-1">
-              <span>Tuyệt Kỹ Hệ</span>
-              <span class="text-amber-400">⚡${this.playerPokemon.moves[1].energy} EP</span>
-            </span>
-          </button>
+          </div>
 
-          <!-- 3. Shield / Guard -->
-          <button id="btn-shield" onclick="battleEngine.playerAction('shield')"
-                  class="p-2 rounded-xl bg-slate-800/70 hover:bg-slate-700/70 border border-slate-700 text-left active:scale-95 transition-all flex items-center justify-between">
-            <span class="text-slate-200 font-bold text-xs flex items-center gap-1">
-              <span>🛡️ Phòng Thủ</span>
-            </span>
-            <span class="text-[9px] text-slate-400">Giảm 50%</span>
-          </button>
+          <!-- Player Controls Bar: Energy, Attacks, Items -->
+          <div class="bg-black/60 backdrop-blur-md rounded-2xl border border-white/10 p-2.5 space-y-2">
+            
+            <!-- Energy Bar & Item Buttons -->
+            <div class="flex items-center justify-between border-b border-white/10 pb-2">
+              <div class="flex items-center gap-2">
+                <span class="text-[10px] font-black uppercase text-amber-400">Năng Lượng Sẵn Sàng:</span>
+                <span id="unattached-energy-badge" class="px-2 py-0.5 rounded-full bg-amber-400/20 border border-amber-400/40 text-amber-300 font-mono text-xs font-black">
+                  ⚡ ${this.playerUnattachedEnergy}
+                </span>
+                <button onclick="battleEngine.attachEnergyToActive()" 
+                        class="px-2.5 py-1 rounded-lg bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-black text-[10px] uppercase shadow active:scale-95 transition-all">
+                  + Gắn Năng Lượng
+                </button>
+              </div>
 
-          <!-- 4. Potion Heal -->
-          <button id="btn-potion" onclick="battleEngine.playerAction('potion')"
-                  class="p-2 rounded-xl bg-slate-800/70 hover:bg-slate-700/70 border border-slate-700 text-left active:scale-95 transition-all flex items-center justify-between">
-            <span class="text-emerald-400 font-bold text-xs flex items-center gap-1">
-              <span>🧪 Dược Phẩm</span>
-            </span>
-            <span id="potion-count-badge" class="text-[10px] px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-bold">
-              ${this.playerHealCharges} còn lại
-            </span>
-          </button>
+              <!-- Supporter Items: Potion & X-Speed -->
+              <div class="flex items-center gap-1.5">
+                <button onclick="battleEngine.useItemPotion()" 
+                        class="px-2 py-1 rounded-lg bg-slate-800 border border-white/10 text-[10px] font-bold text-emerald-300 hover:bg-slate-700 active:scale-95">
+                  🧪 Hồi Máu (${this.playerPotionCount})
+                </button>
+                <button onclick="battleEngine.useItemXSpeed()" 
+                        class="px-2 py-1 rounded-lg bg-slate-800 border border-white/10 text-[10px] font-bold text-cyan-300 hover:bg-slate-700 active:scale-95">
+                  ⚡ Nạp Tốc (${this.playerXSpeedCount})
+                </button>
+              </div>
+            </div>
+
+            <!-- Attack Buttons Generated from Real Card Attacks -->
+            <div class="grid grid-cols-2 gap-2" id="player-attacks-container">
+              ${this.renderAttackButtons()}
+            </div>
+
+          </div>
+
         </div>
 
       </div>
     `;
 
-    this.updateEnergyDisplay();
+    this.updateHpBars();
   }
 
-  updateEnergyDisplay() {
-    const dotsContainer = document.getElementById("player-energy-dots");
-    if (!dotsContainer) return;
-    dotsContainer.innerHTML = "⚡".repeat(Math.min(3, this.playerEnergy));
+  // Render Attack buttons from Active Card
+  renderAttackButtons() {
+    if (!this.playerActive || !this.playerActive.attacks) return "";
+
+    return this.playerActive.attacks.slice(0, 2).map((atk, idx) => {
+      const requiredCost = atk.cost.length;
+      const canCast = this.playerActive.attachedEnergy >= requiredCost;
+
+      return `
+        <button onclick="battleEngine.playerExecuteAttack(${idx})"
+                ${!canCast ? 'disabled' : ''}
+                class="p-2 rounded-xl text-left transition-all shadow-md flex flex-col justify-between ${
+                  canCast 
+                    ? 'bg-gradient-to-r from-indigo-900/90 to-purple-900/90 border border-indigo-400/50 hover:from-indigo-800 hover:to-purple-800 active:scale-95 cursor-pointer' 
+                    : 'bg-slate-900/80 border border-slate-800 opacity-60 cursor-not-allowed'
+                }">
+          <div class="flex items-center justify-between w-full">
+            <span class="text-white font-extrabold text-xs truncate max-w-[120px]">${atk.name}</span>
+            <span class="text-rose-400 font-black text-xs">${atk.damage} DMG</span>
+          </div>
+          <div class="flex items-center justify-between text-[9px] text-slate-400 mt-1 font-bold">
+            <span class="flex items-center gap-0.5 text-amber-300">
+              Yêu cầu: ${"⚡".repeat(requiredCost)}
+            </span>
+            <span class="${canCast ? 'text-emerald-400' : 'text-slate-500'} font-black">
+              ${canCast ? 'SẴN SÀNG ✓' : `Cần ${requiredCost - this.playerActive.attachedEnergy}⚡ nữa`}
+            </span>
+          </div>
+        </button>
+      `;
+    }).join("");
   }
 
-  logAction(msg) {
-    const log = document.getElementById("battle-log");
-    if (log) {
-      log.innerText = msg;
+  // Attach Energy to Active Pokemon
+  attachEnergyToActive() {
+    if (this.playerUnattachedEnergy <= 0) {
+      this.app.showToast("Đã hết năng lượng lượt này! Mỗi lượt chỉ được cấp 1 Năng lượng tự nhiên.", "error");
+      return;
     }
+
+    this.playerUnattachedEnergy--;
+    this.playerActive.attachedEnergy++;
+    soundEngine.playTone(523.25, "triangle", 0.2, 0.2);
+
+    const badge = document.getElementById("unattached-energy-badge");
+    if (badge) badge.innerText = `⚡ ${this.playerUnattachedEnergy}`;
+
+    const attached = document.getElementById("player-attached-energy");
+    if (attached) attached.innerText = this.playerActive.attachedEnergy;
+
+    // Refresh attack button states
+    const atkContainer = document.getElementById("player-attacks-container");
+    if (atkContainer) atkContainer.innerHTML = this.renderAttackButtons();
+
+    this.logAction(`⚡ Đã gắn 1 Năng lượng vào ${this.playerActive.name}! (Hiện có ${this.playerActive.attachedEnergy}⚡)`);
   }
 
-  showFloatingText(isPlayer, text, type = "normal") {
-    const container = document.getElementById(isPlayer ? "player-damage-float" : "enemy-damage-float");
-    if (!container) return;
-
-    const el = document.createElement("div");
-    let color = "text-rose-400";
-    if (type === "crit") color = "text-amber-300 font-black text-sm drop-shadow-[0_0_10px_rgba(251,191,36,0.8)]";
-    if (type === "heal") color = "text-emerald-400 font-black text-sm";
-    if (type === "shield") color = "text-blue-400 font-bold text-xs";
-
-    el.className = `floating-damage font-black ${color} tracking-wider pointer-events-none`;
-    el.innerText = text;
-    container.appendChild(el);
-
-    setTimeout(() => el.remove(), 1200);
-  }
-
-  // Player clicks action
-  playerAction(action) {
+  // Switch Bench Pokemon with Active (Retreat)
+  switchBenchWithActive(benchIndex) {
     if (!this.inBattle || this.turn !== "player" || this.isActionPending) return;
+    if (benchIndex < 0 || benchIndex >= this.playerBench.length) return;
 
     soundEngine.playTap();
-    this.isActionPending = true;
+    const temp = this.playerActive;
+    this.playerActive = this.playerBench[benchIndex];
+    this.playerBench[benchIndex] = temp;
 
-    if (action === "move_1") {
-      this.executePlayerAttack(this.playerPokemon.moves[0]);
-    } else if (action === "move_2") {
-      const move = this.playerPokemon.moves[1];
-      if (this.playerEnergy < move.energy) {
-        this.app.showToast(`Cần ${move.energy} năng lượng ⚡ để tung Tuyệt Kỹ! Hãy tấn công thường để tích lũy.`, "error");
-        this.isActionPending = false;
-        return;
-      }
-      this.playerEnergy -= move.energy;
-      this.updateEnergyDisplay();
-      this.executePlayerAttack(move);
-    } else if (action === "shield") {
-      this.playerShield = true;
-      this.playerEnergy = Math.min(3, this.playerEnergy + 1);
-      this.updateEnergyDisplay();
-      soundEngine.playShield();
-      this.showFloatingText(true, "🛡️ Phòng Thủ!", "shield");
-      this.logAction(`🛡️ ${this.playerPokemon.name} vào thế phòng thủ và tích thêm 1 năng lượng!`);
-      this.endTurn("player");
-    } else if (action === "potion") {
-      if (this.playerHealCharges <= 0) {
-        this.app.showToast("Đã hết dược phẩm hồi phục trong trận đấu này!", "error");
-        this.isActionPending = false;
-        return;
-      }
-      this.playerHealCharges--;
-      const healAmount = Math.floor(this.playerPokemon.maxHp * 0.35);
-      this.playerPokemon.currentHp = Math.min(this.playerPokemon.maxHp, this.playerPokemon.currentHp + healAmount);
-      
-      const badge = document.getElementById("potion-count-badge");
-      if (badge) badge.innerText = `${this.playerHealCharges} còn lại`;
-
-      soundEngine.playHeal();
-      this.showFloatingText(true, `+${healAmount} HP`, "heal");
-      this.updateHpBars();
-      this.logAction(`🧪 ${this.playerPokemon.name} dùng dược phẩm hồi phục ${healAmount} HP!`);
-      this.endTurn("player");
-    }
+    this.renderPlaymatArena();
+    this.logAction(`⇄ Đã đổi ${this.playerActive.name} lên vị trí Chiến Đấu Chính!`);
   }
 
-  // Execute Player Attack
-  executePlayerAttack(move) {
-    // Attack Lunge Animation
-    const playerSprite = document.getElementById("player-sprite");
-    if (playerSprite) playerSprite.classList.add("attack-lunge-player");
-    setTimeout(() => playerSprite?.classList.remove("attack-lunge-player"), 350);
+  // Player Execute Attack
+  playerExecuteAttack(attackIndex) {
+    if (!this.inBattle || this.turn !== "player" || this.isActionPending) return;
 
-    const calc = this.calculateDamage(this.playerPokemon, this.enemyPokemon, move, this.enemyShield);
-    this.enemyShield = false;
+    const atk = this.playerActive.attacks[attackIndex];
+    if (!atk) return;
 
-    // Apply Damage
-    this.enemyPokemon.currentHp = Math.max(0, this.enemyPokemon.currentHp - calc.damage);
-
-    // Audio & Haptic
-    if (calc.isCrit) {
-      soundEngine.playCrit();
-      document.getElementById("battle-arena")?.classList.add("shake");
-      setTimeout(() => document.getElementById("battle-arena")?.classList.remove("shake"), 350);
-      this.showFloatingText(false, `💥 BẠO KÍCH! -${calc.damage}`, "crit");
-    } else if (calc.typeMult > 1) {
-      soundEngine.playSuperEffective();
-      this.showFloatingText(false, `⚡ SIÊU HIỆU QUẢ! -${calc.damage}`, "crit");
-    } else {
-      soundEngine.playAttack();
-      this.showFloatingText(false, `-${calc.damage}`);
+    if (this.playerActive.attachedEnergy < atk.cost.length) {
+      this.app.showToast(`Cần ${atk.cost.length}⚡ Năng lượng để dùng [${atk.name}]!`, "error");
+      return;
     }
 
+    this.isActionPending = true;
+    soundEngine.playAttack();
+
+    // Attack Lunge Animation
+    const activeEl = document.getElementById("player-active-wrapper");
+    if (activeEl) activeEl.classList.add("strike-lunge");
+    setTimeout(() => activeEl?.classList.remove("strike-lunge"), 350);
+
+    // Damage & Weakness Multiplier
+    const mult = this.getTypeMultiplier(this.playerActive.type, this.enemyActive.type);
+    let finalDamage = Math.floor(atk.damage * mult);
+
+    this.enemyActive.currentHp = Math.max(0, this.enemyActive.currentHp - finalDamage);
+
+    // Visuals & Sound
+    if (mult > 1) {
+      soundEngine.playSuperEffective();
+      this.showFloatingText(false, `⚡ KHẮC HỆ x2! -${finalDamage}`, "crit");
+    } else {
+      soundEngine.playCrit();
+      this.showFloatingText(false, `-${finalDamage}`);
+    }
+
+    document.getElementById("playmat-arena")?.classList.add("shake");
+    setTimeout(() => document.getElementById("playmat-arena")?.classList.remove("shake"), 350);
+
     if (window.Telegram?.WebApp?.HapticFeedback) {
-      window.Telegram.WebApp.HapticFeedback.impactOccurred(calc.isCrit ? "heavy" : "medium");
+      window.Telegram.WebApp.HapticFeedback.impactOccurred("heavy");
     }
 
     this.updateHpBars();
-    this.logAction(`💥 ${this.playerPokemon.name} dùng [${move.name}] gây ${calc.damage} sát thương!`);
+    this.logAction(`💥 ${this.playerActive.name} dùng [${atk.name}] gây ${finalDamage} sát thương!`);
 
-    // Gain 1 energy per basic attack
-    if (move.energy === 0) {
-      this.playerEnergy = Math.min(3, this.playerEnergy + 1);
-      this.updateEnergyDisplay();
-    }
-
-    // Check Victory
-    if (this.enemyPokemon.currentHp <= 0) {
-      setTimeout(() => this.handleVictory(), 800);
+    // Check Knock Out
+    if (this.enemyActive.currentHp <= 0) {
+      setTimeout(() => this.handleEnemyKnockOut(), 700);
     } else {
       this.endTurn("player");
     }
   }
 
-  // End of Turn and switch
+  // Handle Knock Out on Enemy
+  handleEnemyKnockOut() {
+    const pointsAwarded = this.enemyActive.isEx ? 2 : 1;
+    this.playerPrizePoints += pointsAwarded;
+    soundEngine.playVictory();
+
+    this.logAction(`💀 ${this.enemyActive.name} ĐÃ BỊ HẠ GỤC! Bạn nhận +${pointsAwarded} Điểm Thắng!`);
+
+    // Check Match Win (3 Prize Points)
+    if (this.playerPrizePoints >= 3) {
+      setTimeout(() => this.handleMatchVictory(), 800);
+      return;
+    }
+
+    // Promote enemy bench
+    if (this.enemyBench.length > 0) {
+      this.enemyActive = this.enemyBench.shift();
+      this.renderPlaymatArena();
+      this.logAction(`⚠️ ${this.currentLeader.name} đưa ${this.enemyActive.name} từ ghế dự bị lên sàn đấu!`);
+      this.endTurn("player");
+    } else {
+      this.handleMatchVictory();
+    }
+  }
+
+  // Opponent AI Turn
+  executeEnemyTurn() {
+    if (!this.inBattle || this.enemyActive.currentHp <= 0) return;
+
+    // AI gains 1 energy
+    this.enemyActive.attachedEnergy++;
+    const attachedBadge = document.getElementById("enemy-attached-energy");
+    if (attachedBadge) attachedBadge.innerText = this.enemyActive.attachedEnergy;
+
+    setTimeout(() => {
+      // Pick attack
+      let chosenAtk = this.enemyActive.attacks[0];
+      if (this.enemyActive.attacks[1] && this.enemyActive.attachedEnergy >= this.enemyActive.attacks[1].cost.length) {
+        chosenAtk = this.enemyActive.attacks[1];
+      }
+
+      // Attack Animation
+      const activeEl = document.getElementById("enemy-active-wrapper");
+      if (activeEl) activeEl.classList.add("strike-lunge");
+      setTimeout(() => activeEl?.classList.remove("strike-lunge"), 350);
+
+      const mult = this.getTypeMultiplier(this.enemyActive.type, this.playerActive.type);
+      let damage = Math.floor(chosenAtk.damage * mult);
+
+      this.playerActive.currentHp = Math.max(0, this.playerActive.currentHp - damage);
+
+      soundEngine.playAttack();
+      this.showFloatingText(true, `-${damage}`);
+
+      if (window.Telegram?.WebApp?.HapticFeedback) {
+        window.Telegram.WebApp.HapticFeedback.impactOccurred("medium");
+      }
+
+      this.updateHpBars();
+      this.logAction(`⚠️ ${this.enemyActive.name} dùng [${chosenAtk.name}] gây ${damage} sát thương!`);
+
+      // Check Player Active Knock Out
+      if (this.playerActive.currentHp <= 0) {
+        setTimeout(() => this.handlePlayerKnockOut(), 700);
+      } else {
+        this.endTurn("enemy");
+      }
+    }, 1100);
+  }
+
+  // Handle Player Knock Out
+  handlePlayerKnockOut() {
+    const points = this.playerActive.isEx ? 2 : 1;
+    this.enemyPrizePoints += points;
+    soundEngine.playDefeat();
+
+    this.logAction(`💀 Pokémon của bạn đã bị hạ gục! Đối thủ nhận +${points} Điểm Thắng.`);
+
+    if (this.enemyPrizePoints >= 3) {
+      setTimeout(() => this.handleMatchDefeat(), 800);
+      return;
+    }
+
+    if (this.playerBench.length > 0) {
+      this.playerActive = this.playerBench.shift();
+      this.renderPlaymatArena();
+      this.logAction(`Đã đưa ${this.playerActive.name} từ ghế dự bị lên thay thế!`);
+      this.endTurn("enemy");
+    } else {
+      this.handleMatchDefeat();
+    }
+  }
+
+  // End of Turn Switch
   endTurn(currentTurn) {
     if (currentTurn === "player") {
       this.turn = "enemy";
-      this.updateTurnBadge("Lượt của đối thủ...", "bg-rose-500/20 text-rose-300 border-rose-500/30");
-      setTimeout(() => this.executeEnemyTurn(), 1100);
+      this.updateTurnBadge("Lượt Của Đối Thủ...", "bg-rose-500/20 text-rose-300 border-rose-500/30");
+      setTimeout(() => this.executeEnemyTurn(), 1000);
     } else {
       this.turn = "player";
+      this.turnCount++;
       this.isActionPending = false;
-      this.updateTurnBadge("Lượt của bạn", "bg-indigo-500/20 text-indigo-300 border-indigo-500/30");
+      this.playerUnattachedEnergy++; // give 1 energy each turn
+      this.renderPlaymatArena();
+      this.updateTurnBadge("Lượt Của Bạn — Hãy Gắn Năng Lượng & Tấn Công", "bg-amber-500/20 text-amber-300 border-amber-500/40");
+    }
+  }
+
+  // Use Potion Supporter Item
+  useItemPotion() {
+    if (this.playerPotionCount <= 0) {
+      this.app.showToast("Đã hết Dược Phẩm Potion trong trận đấu này!", "error");
+      return;
+    }
+
+    this.playerPotionCount--;
+    const healAmount = 50;
+    this.playerActive.currentHp = Math.min(this.playerActive.maxHp, this.playerActive.currentHp + healAmount);
+
+    soundEngine.playHeal();
+    this.showFloatingText(true, `+${healAmount} HP`, "heal");
+    this.updateHpBars();
+    this.logAction(`🧪 Dùng Potion hồi phục +${healAmount} HP cho ${this.playerActive.name}!`);
+  }
+
+  // Use X-Speed Item
+  useItemXSpeed() {
+    if (this.playerXSpeedCount <= 0) {
+      this.app.showToast("Đã dùng hết Nạp Tốc X-Speed!", "error");
+      return;
+    }
+
+    this.playerXSpeedCount--;
+    this.playerUnattachedEnergy += 2; // grant 2 bonus energy!
+    soundEngine.playTone(784, "sine", 0.3, 0.2);
+
+    const badge = document.getElementById("unattached-energy-badge");
+    if (badge) badge.innerText = `⚡ ${this.playerUnattachedEnergy}`;
+
+    this.app.showToast("⚡ Nhận thêm +2 Năng Lượng bổ sung từ X-Speed!", "success");
+    this.logAction("⚡ Dùng X-Speed nạp tức thì +2 Năng lượng!");
+  }
+
+  updateHpBars() {
+    const enemyHpBar = document.getElementById("enemy-hp-bar");
+    const enemyHpText = document.getElementById("enemy-hp-text");
+    const playerHpBar = document.getElementById("player-hp-bar");
+    const playerHpText = document.getElementById("player-hp-text");
+
+    if (enemyHpBar && enemyHpText && this.enemyActive) {
+      const pct = Math.max(0, Math.min(100, (this.enemyActive.currentHp / this.enemyActive.maxHp) * 100));
+      enemyHpBar.style.width = `${pct}%`;
+      enemyHpText.innerText = `${this.enemyActive.currentHp}/${this.enemyActive.maxHp} HP`;
+    }
+
+    if (playerHpBar && playerHpText && this.playerActive) {
+      const pct = Math.max(0, Math.min(100, (this.playerActive.currentHp / this.playerActive.maxHp) * 100));
+      playerHpBar.style.width = `${pct}%`;
+      playerHpText.innerText = `${this.playerActive.currentHp}/${this.playerActive.maxHp} HP`;
     }
   }
 
@@ -420,77 +576,29 @@ class BattleEngine {
     }
   }
 
-  // AI Enemy Turn Execution
-  executeEnemyTurn() {
-    if (!this.inBattle || this.enemyPokemon.currentHp <= 0) return;
-
-    // AI Decision: 70% basic attack, 20% special move, 10% shield
-    const rand = Math.random();
-    const enemySprite = document.getElementById("enemy-sprite");
-    if (enemySprite) enemySprite.classList.add("attack-lunge-enemy");
-    setTimeout(() => enemySprite?.classList.remove("attack-lunge-enemy"), 350);
-
-    let move = this.enemyPokemon.moves[0];
-    if (rand > 0.8 && this.enemyPokemon.moves[1]) {
-      move = this.enemyPokemon.moves[1];
-    }
-
-    const calc = this.calculateDamage(this.enemyPokemon, this.playerPokemon, move, this.playerShield);
-    this.playerShield = false;
-
-    this.playerPokemon.currentHp = Math.max(0, this.playerPokemon.currentHp - calc.damage);
-
-    if (calc.isCrit) {
-      soundEngine.playCrit();
-      this.showFloatingText(true, `💥 ĐỐI THỦ BẠO KÍCH! -${calc.damage}`, "crit");
-    } else {
-      soundEngine.playAttack();
-      this.showFloatingText(true, `-${calc.damage}`);
-    }
-
-    if (window.Telegram?.WebApp?.HapticFeedback) {
-      window.Telegram.WebApp.HapticFeedback.impactOccurred("medium");
-    }
-
-    this.updateHpBars();
-    this.logAction(`⚠️ ${this.enemyPokemon.name} phản kích bằng [${move.name}] gây ${calc.damage} sát thương!`);
-
-    // Check Defeat
-    if (this.playerPokemon.currentHp <= 0) {
-      setTimeout(() => this.handleDefeat(), 800);
-    } else {
-      this.endTurn("enemy");
-    }
+  logAction(msg) {
+    const log = document.getElementById("battle-log");
+    if (log) log.innerText = msg;
   }
 
-  // Smoothly update HP bars
-  updateHpBars() {
-    const enemyHpBar = document.getElementById("enemy-hp-bar");
-    const enemyHpText = document.getElementById("enemy-hp-text");
-    const playerHpBar = document.getElementById("player-hp-bar");
-    const playerHpText = document.getElementById("player-hp-text");
+  showFloatingText(isPlayer, text, type = "normal") {
+    const container = document.getElementById(isPlayer ? "player-damage-float" : "enemy-damage-float");
+    if (!container) return;
 
-    if (enemyHpBar && enemyHpText) {
-      const pct = Math.max(0, Math.min(100, (this.enemyPokemon.currentHp / this.enemyPokemon.maxHp) * 100));
-      enemyHpBar.style.width = `${pct}%`;
-      enemyHpText.innerText = `${this.enemyPokemon.currentHp}/${this.enemyPokemon.maxHp}`;
-      enemyHpBar.className = `h-full transition-all duration-500 rounded-full ${
-        pct > 50 ? "bg-gradient-to-r from-emerald-500 to-green-400" : pct > 20 ? "bg-gradient-to-r from-amber-500 to-yellow-400" : "bg-gradient-to-r from-rose-600 to-red-500"
-      }`;
-    }
+    const el = document.createElement("div");
+    let color = "text-rose-400 font-extrabold text-sm";
+    if (type === "crit") color = "text-amber-300 font-black text-base drop-shadow-[0_0_10px_rgba(251,191,36,0.8)]";
+    if (type === "heal") color = "text-emerald-400 font-black text-sm";
 
-    if (playerHpBar && playerHpText) {
-      const pct = Math.max(0, Math.min(100, (this.playerPokemon.currentHp / this.playerPokemon.maxHp) * 100));
-      playerHpBar.style.width = `${pct}%`;
-      playerHpText.innerText = `${this.playerPokemon.currentHp}/${this.playerPokemon.maxHp}`;
-      playerHpBar.className = `h-full transition-all duration-500 rounded-full ${
-        pct > 50 ? "bg-gradient-to-r from-emerald-500 to-green-400" : pct > 20 ? "bg-gradient-to-r from-amber-500 to-yellow-400" : "bg-gradient-to-r from-rose-600 to-red-500"
-      }`;
-    }
+    el.className = `floating-damage font-black ${color} tracking-wider pointer-events-none`;
+    el.innerText = text;
+    container.appendChild(el);
+
+    setTimeout(() => el.remove(), 1200);
   }
 
-  // Handle Battle Victory
-  handleVictory() {
+  // Handle Match Victory
+  handleMatchVictory() {
     this.inBattle = false;
     soundEngine.playVictory();
 
@@ -505,26 +613,14 @@ class BattleEngine {
     this.app.state.stats.battlesWon++;
     this.app.recordQuestProgress("win_battle");
 
-    // Award card level up exp
-    const card = this.app.state.collection.find((c) => c.instanceId === this.playerPokemon.instanceId);
-    if (card) {
-      card.exp = (card.exp || 0) + expReward;
-      if (card.exp >= card.level * 100) {
-        card.level++;
-        card.hp = Math.floor(card.hp * 1.08);
-        card.atk = Math.floor(card.atk * 1.08);
-        this.app.showToast(`🎉 Thẻ ${card.name} vừa thăng lên Cấp ${card.level}! (+8% HP & ATK)`, "success");
-      }
-    }
-
     this.app.saveState();
     this.app.renderHeaderStats();
 
     this.showEndBattleModal(true, coinsReward, expReward);
   }
 
-  // Handle Battle Defeat
-  handleDefeat() {
+  // Handle Match Defeat
+  handleMatchDefeat() {
     this.inBattle = false;
     soundEngine.playDefeat();
 
@@ -535,7 +631,7 @@ class BattleEngine {
     this.app.state.stats.battlesLost++;
     this.app.saveState();
 
-    this.showEndBattleModal(false, 0, 10);
+    this.showEndBattleModal(false, 0, 15);
   }
 
   showEndBattleModal(isVictory, coins, exp) {
@@ -552,29 +648,30 @@ class BattleEngine {
         </div>
 
         <h3 class="text-xl font-black text-white uppercase tracking-wide">
-          ${isVictory ? 'Chiến Thắng Vang Dội!' : 'Thất Bại Tiếc Nuối!'}
+          ${isVictory ? 'Chiến Thắng Tuyệt Đối!' : 'Thất Bại Tiếc Nuối!'}
         </h3>
         <p class="text-xs text-slate-300 mt-1">
           ${isVictory 
-            ? `Bạn đã đánh bại ${this.currentLeader.name} thành công!` 
-            : `Pokémon của bạn đã kiệt sức. Hãy nâng cấp thẻ bài và thử lại!`}
+            ? `Bạn đã xuất sắc đánh bại ${this.currentLeader.name} và giành trọn 3 Điểm Thắng!` 
+            : `Toàn bộ đội hình của bạn đã kiệt sức trước ${this.currentLeader.name}. Hãy thử lại!`
+          }
         </p>
 
         <!-- Rewards Box -->
-        <div class="my-5 p-3.5 rounded-2xl bg-black/40 border border-white/10 flex items-center justify-around">
+        <div class="my-5 p-3.5 rounded-2xl bg-black/50 border border-white/10 flex items-center justify-around shadow-inner">
           <div class="flex items-center gap-2">
-            <span class="text-xl">🪙</span>
+            <span class="text-2xl">🪙</span>
             <div class="text-left">
-              <span class="text-[10px] text-slate-400 uppercase font-bold block">Phần Thưởng</span>
-              <span class="text-amber-400 font-black text-sm">+${coins} Xu</span>
+              <span class="text-[10px] text-slate-400 uppercase font-black block">Phần Thưởng</span>
+              <span class="text-amber-400 font-black text-base">+${coins} Xu</span>
             </div>
           </div>
           <div class="h-8 w-px bg-white/10"></div>
           <div class="flex items-center gap-2">
-            <span class="text-xl">⭐</span>
+            <span class="text-2xl">⭐</span>
             <div class="text-left">
-              <span class="text-[10px] text-slate-400 uppercase font-bold block">Kinh Nghiệm</span>
-              <span class="text-indigo-400 font-black text-sm">+${exp} EXP</span>
+              <span class="text-[10px] text-slate-400 uppercase font-black block">Kinh Nghiệm</span>
+              <span class="text-indigo-400 font-black text-base">+${exp} EXP</span>
             </div>
           </div>
         </div>
@@ -582,11 +679,11 @@ class BattleEngine {
         <!-- Buttons -->
         <div class="space-y-2">
           <button onclick="battleEngine.closeResultModal(); battleEngine.startBattle('${this.currentLeader.id}')" 
-                  class="w-full py-3 rounded-xl font-black text-xs uppercase tracking-wider bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-400 hover:to-purple-500 text-white shadow-lg shadow-indigo-500/25 active:scale-95 transition-all">
+                  class="w-full py-3 rounded-2xl font-black text-xs uppercase tracking-wider bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 shadow-lg shadow-amber-500/25 active:scale-95 transition-all">
             Đấu Lại Trận Này ⚔️
           </button>
           <button onclick="battleEngine.closeResultModal(); app.switchTab('arena-list')" 
-                  class="w-full py-3 rounded-xl font-bold text-xs uppercase tracking-wider bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 active:scale-95 transition-all">
+                  class="w-full py-3 rounded-2xl font-bold text-xs uppercase tracking-wider bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 active:scale-95 transition-all">
             Quay Về Danh Sách Nhà Thi Đấu
           </button>
         </div>
